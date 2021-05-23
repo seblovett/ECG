@@ -1,0 +1,12 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "h:\\GitHub\\ecg\\embedded\\ecg\\build",
+            "binaryPath": "h:\\GitHub\\ecg\\embedded\\ecg\\build\\ecg.elf",
+            "binaryArgs": []
+        }
+    ],
+    "files.associations": {
+        "main.h": "c"
+    }
+}

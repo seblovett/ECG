@@ -1,0 +1,3030 @@
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"usbh_cdc.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.USBH_CDC_SOFProcess,"ax",%progbits
+  18              		.align	1
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv5-sp-d16
+  25              	USBH_CDC_SOFProcess:
+  26              	.LVL0:
+  27              	.LFB153:
+  28              		.file 1 "Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c"
+   1:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+   2:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   ******************************************************************************
+   3:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @file    usbh_cdc.c
+   4:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @author  MCD Application Team
+   5:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief   This file is the CDC Layer Handlers for USB Host CDC class.
+   6:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *
+   7:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *  @verbatim
+   8:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *
+   9:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *          ===================================================================
+  10:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *                                CDC Class Driver Description
+  11:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *          ===================================================================
+  12:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *           This driver manages the "Universal Serial Bus Class Definitions for Communications De
+  13:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *           Revision 1.2 November 16, 2007" and the sub-protocol specification of "Universal Seri
+  14:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *           Communications Class Subclass Specification for PSTN Devices Revision 1.2 February 9,
+  15:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *           This driver implements the following aspects of the specification:
+  16:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *             - Device descriptor management
+  17:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *             - Configuration descriptor management
+  18:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *             - Enumeration as CDC device with 2 data endpoints (IN and OUT) and 1 command endpoi
+  19:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *             - Requests management (as described in section 6.2 in specification)
+  20:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *             - Abstract Control Model compliant
+  21:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *             - Union Functional collection (using 1 IN endpoint for control)
+  22:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *             - Data interface class
+  23:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *
+  24:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *  @endverbatim
+  25:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *
+  26:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   ******************************************************************************
+  27:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @attention
+  28:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *
+  29:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * <h2><center>&copy; Copyright (c) 2015 STMicroelectronics.
+  30:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * All rights reserved.</center></h2>
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 2
+
+
+  31:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *
+  32:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * This software component is licensed by ST under Ultimate Liberty license
+  33:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * SLA0044, the "License"; You may not use this file except in compliance with
+  34:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * the License. You may obtain a copy of the License at:
+  35:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *                      www.st.com/SLA0044
+  36:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *
+  37:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   ******************************************************************************
+  38:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+  39:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  40:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /* BSPDependencies
+  41:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** - "stm32xxxxx_{eval}{discovery}{nucleo_144}.c"
+  42:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** - "stm32xxxxx_{eval}{discovery}_io.c"
+  43:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** - "stm32xxxxx_{eval}{discovery}{adafruit}_sd.c"
+  44:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** - "stm32xxxxx_{eval}{discovery}{adafruit}_lcd.c"
+  45:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** - "stm32xxxxx_{eval}{discovery}_sdram.c"
+  46:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** EndBSPDependencies */
+  47:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  48:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /* Includes ------------------------------------------------------------------*/
+  49:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #include "usbh_cdc.h"
+  50:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  51:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @addtogroup USBH_LIB
+  52:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+  53:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  54:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  55:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @addtogroup USBH_CLASS
+  56:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+  57:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  58:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  59:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @addtogroup USBH_CDC_CLASS
+  60:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+  61:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  62:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  63:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @defgroup USBH_CDC_CORE
+  64:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @brief    This file includes CDC Layer Handlers for USB Host CDC class.
+  65:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+  66:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  67:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  68:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @defgroup USBH_CDC_CORE_Private_TypesDefinitions
+  69:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+  70:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  71:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+  72:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @}
+  73:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  74:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  75:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  76:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @defgroup USBH_CDC_CORE_Private_Defines
+  77:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+  78:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  79:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #define USBH_CDC_BUFFER_SIZE                 1024
+  80:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+  81:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @}
+  82:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  83:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  84:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  85:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @defgroup USBH_CDC_CORE_Private_Macros
+  86:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+  87:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 3
+
+
+  88:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+  89:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @}
+  90:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  91:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  92:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+  93:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @defgroup USBH_CDC_CORE_Private_Variables
+  94:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+  95:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  96:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+  97:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @}
+  98:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+  99:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 100:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 101:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @defgroup USBH_CDC_CORE_Private_FunctionPrototypes
+ 102:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+ 103:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 104:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 105:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_InterfaceInit(USBH_HandleTypeDef *phost);
+ 106:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 107:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_InterfaceDeInit(USBH_HandleTypeDef *phost);
+ 108:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 109:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_Process(USBH_HandleTypeDef *phost);
+ 110:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 111:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_SOFProcess(USBH_HandleTypeDef *phost);
+ 112:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 113:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_ClassRequest(USBH_HandleTypeDef *phost);
+ 114:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 115:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef GetLineCoding(USBH_HandleTypeDef *phost,
+ 116:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                         CDC_LineCodingTypeDef *linecoding);
+ 117:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 118:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef SetLineCoding(USBH_HandleTypeDef *phost,
+ 119:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                         CDC_LineCodingTypeDef *linecoding);
+ 120:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 121:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static void CDC_ProcessTransmission(USBH_HandleTypeDef *phost);
+ 122:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 123:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static void CDC_ProcessReception(USBH_HandleTypeDef *phost);
+ 124:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 125:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** USBH_ClassTypeDef  CDC_Class =
+ 126:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 127:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   "CDC",
+ 128:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USB_CDC_CLASS,
+ 129:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_CDC_InterfaceInit,
+ 130:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_CDC_InterfaceDeInit,
+ 131:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_CDC_ClassRequest,
+ 132:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_CDC_Process,
+ 133:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_CDC_SOFProcess,
+ 134:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   NULL,
+ 135:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** };
+ 136:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 137:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @}
+ 138:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 139:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 140:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 141:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /** @defgroup USBH_CDC_CORE_Private_Functions
+ 142:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @{
+ 143:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 144:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 4
+
+
+ 145:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 146:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  USBH_CDC_InterfaceInit
+ 147:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *         The function init the CDC class.
+ 148:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  phost: Host handle
+ 149:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval USBH Status
+ 150:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 151:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_InterfaceInit(USBH_HandleTypeDef *phost)
+ 152:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 153:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 154:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef status;
+ 155:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   uint8_t interface;
+ 156:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle;
+ 157:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 158:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   interface = USBH_FindInterface(phost, COMMUNICATION_INTERFACE_CLASS_CODE,
+ 159:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                  ABSTRACT_CONTROL_MODEL, COMMON_AT_COMMAND);
+ 160:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 161:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if ((interface == 0xFFU) || (interface >= USBH_MAX_NUM_INTERFACES)) /* No Valid Interface */
+ 162:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 163:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_DbgLog("Cannot Find the interface for Communication Interface Class.", phost->pActiveClass
+ 164:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     return USBH_FAIL;
+ 165:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 166:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 167:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   status = USBH_SelectInterface(phost, interface);
+ 168:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 169:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (status != USBH_OK)
+ 170:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 171:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     return USBH_FAIL;
+ 172:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 173:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 174:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->pActiveClass->pData = (CDC_HandleTypeDef *)USBH_malloc(sizeof(CDC_HandleTypeDef));
+ 175:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 176:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 177:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (CDC_Handle == NULL)
+ 178:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 179:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_DbgLog("Cannot allocate memory for CDC Handle");
+ 180:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     return USBH_FAIL;
+ 181:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 182:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 183:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /* Initialize cdc handler */
+ 184:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_memset(CDC_Handle, 0, sizeof(CDC_HandleTypeDef));
+ 185:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 186:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /*Collect the notification endpoint address and length*/
+ 187:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].bEndpointAddress & 0x80U)
+ 188:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 189:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->CommItf.NotifEp = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].bEndpointAdd
+ 190:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->CommItf.NotifEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].wMaxPac
+ 191:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 192:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 193:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /*Allocate the length for host channel number in*/
+ 194:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle->CommItf.NotifPipe = USBH_AllocPipe(phost, CDC_Handle->CommItf.NotifEp);
+ 195:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 196:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /* Open pipe for Notification endpoint */
+ 197:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_OpenPipe(phost, CDC_Handle->CommItf.NotifPipe, CDC_Handle->CommItf.NotifEp,
+ 198:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                 phost->device.address, phost->device.speed, USB_EP_TYPE_INTR,
+ 199:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                 CDC_Handle->CommItf.NotifEpSize);
+ 200:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 201:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_LL_SetToggle(phost, CDC_Handle->CommItf.NotifPipe, 0U);
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 5
+
+
+ 202:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 203:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   interface = USBH_FindInterface(phost, DATA_INTERFACE_CLASS_CODE,
+ 204:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                  RESERVED, NO_CLASS_SPECIFIC_PROTOCOL_CODE);
+ 205:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 206:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if ((interface == 0xFFU) || (interface >= USBH_MAX_NUM_INTERFACES)) /* No Valid Interface */
+ 207:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 208:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_DbgLog("Cannot Find the interface for Data Interface Class.", phost->pActiveClass->Name);
+ 209:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     return USBH_FAIL;
+ 210:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 211:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 212:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /*Collect the class specific endpoint address and length*/
+ 213:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].bEndpointAddress & 0x80U)
+ 214:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 215:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InEp = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].bEndpointAddres
+ 216:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].wMaxPacket
+ 217:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 218:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   else
+ 219:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 220:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutEp = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].bEndpointAddre
+ 221:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].wMaxPacke
+ 222:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 223:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 224:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[1].bEndpointAddress & 0x80U)
+ 225:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 226:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InEp = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[1].bEndpointAddres
+ 227:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[1].wMaxPacket
+ 228:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 229:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   else
+ 230:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 231:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutEp = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[1].bEndpointAddre
+ 232:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutEpSize = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[1].wMaxPacket
+ 233:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 234:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 235:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /*Allocate the length for host channel number out*/
+ 236:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle->DataItf.OutPipe = USBH_AllocPipe(phost, CDC_Handle->DataItf.OutEp);
+ 237:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 238:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /*Allocate the length for host channel number in*/
+ 239:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle->DataItf.InPipe = USBH_AllocPipe(phost, CDC_Handle->DataItf.InEp);
+ 240:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 241:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /* Open channel for OUT endpoint */
+ 242:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_OpenPipe(phost, CDC_Handle->DataItf.OutPipe, CDC_Handle->DataItf.OutEp,
+ 243:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                 phost->device.address, phost->device.speed, USB_EP_TYPE_BULK,
+ 244:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                 CDC_Handle->DataItf.OutEpSize);
+ 245:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 246:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /* Open channel for IN endpoint */
+ 247:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_OpenPipe(phost, CDC_Handle->DataItf.InPipe, CDC_Handle->DataItf.InEp,
+ 248:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                 phost->device.address, phost->device.speed, USB_EP_TYPE_BULK,
+ 249:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                 CDC_Handle->DataItf.InEpSize);
+ 250:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 251:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle->state = CDC_IDLE_STATE;
+ 252:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 253:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_LL_SetToggle(phost, CDC_Handle->DataItf.OutPipe, 0U);
+ 254:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_LL_SetToggle(phost, CDC_Handle->DataItf.InPipe, 0U);
+ 255:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 256:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return USBH_OK;
+ 257:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 258:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 6
+
+
+ 259:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 260:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 261:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 262:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  USBH_CDC_InterfaceDeInit
+ 263:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *         The function DeInit the Pipes used for the CDC class.
+ 264:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  phost: Host handle
+ 265:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval USBH Status
+ 266:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 267:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_InterfaceDeInit(USBH_HandleTypeDef *phost)
+ 268:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 269:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 270:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 271:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (CDC_Handle->CommItf.NotifPipe)
+ 272:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 273:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_ClosePipe(phost, CDC_Handle->CommItf.NotifPipe);
+ 274:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_FreePipe(phost, CDC_Handle->CommItf.NotifPipe);
+ 275:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->CommItf.NotifPipe = 0U;     /* Reset the Channel as Free */
+ 276:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 277:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 278:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (CDC_Handle->DataItf.InPipe)
+ 279:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 280:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_ClosePipe(phost, CDC_Handle->DataItf.InPipe);
+ 281:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_FreePipe(phost, CDC_Handle->DataItf.InPipe);
+ 282:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InPipe = 0U;     /* Reset the Channel as Free */
+ 283:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 284:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 285:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (CDC_Handle->DataItf.OutPipe)
+ 286:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 287:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_ClosePipe(phost, CDC_Handle->DataItf.OutPipe);
+ 288:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_FreePipe(phost, CDC_Handle->DataItf.OutPipe);
+ 289:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutPipe = 0U;    /* Reset the Channel as Free */
+ 290:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 291:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 292:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (phost->pActiveClass->pData)
+ 293:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 294:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_free(phost->pActiveClass->pData);
+ 295:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     phost->pActiveClass->pData = 0U;
+ 296:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 297:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 298:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return USBH_OK;
+ 299:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 300:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 301:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 302:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  USBH_CDC_ClassRequest
+ 303:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *         The function is responsible for handling Standard requests
+ 304:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *         for CDC class.
+ 305:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  phost: Host handle
+ 306:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval USBH Status
+ 307:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 308:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_ClassRequest(USBH_HandleTypeDef *phost)
+ 309:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 310:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef status;
+ 311:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 312:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 313:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /* Issue the get line coding request */
+ 314:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   status = GetLineCoding(phost, &CDC_Handle->LineCoding);
+ 315:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (status == USBH_OK)
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 7
+
+
+ 316:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 317:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     phost->pUser(phost, HOST_USER_CLASS_ACTIVE);
+ 318:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 319:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   else if (status == USBH_NOT_SUPPORTED)
+ 320:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 321:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_ErrLog("Control error: CDC: Device Get Line Coding configuration failed");
+ 322:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 323:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   else
+ 324:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 325:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     /* .. */
+ 326:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 327:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return status;
+ 329:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 330:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 331:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 332:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 333:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  USBH_CDC_Process
+ 334:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *         The function is for managing state machine for CDC data transfers
+ 335:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  phost: Host handle
+ 336:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval USBH Status
+ 337:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 338:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_Process(USBH_HandleTypeDef *phost)
+ 339:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef status = USBH_BUSY;
+ 341:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 342:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 343:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 344:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   switch (CDC_Handle->state)
+ 345:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 346:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 347:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     case CDC_IDLE_STATE:
+ 348:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       status = USBH_OK;
+ 349:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 350:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 351:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     case CDC_SET_LINE_CODING_STATE:
+ 352:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       req_status = SetLineCoding(phost, CDC_Handle->pUserLineCoding);
+ 353:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 354:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       if (req_status == USBH_OK)
+ 355:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 356:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         CDC_Handle->state = CDC_GET_LAST_LINE_CODING_STATE;
+ 357:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 358:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 359:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       else
+ 360:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 361:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         if (req_status != USBH_BUSY)
+ 362:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 363:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->state = CDC_ERROR_STATE;
+ 364:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 365:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 366:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 367:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 368:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 369:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     case CDC_GET_LAST_LINE_CODING_STATE:
+ 370:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       req_status = GetLineCoding(phost, &(CDC_Handle->LineCoding));
+ 371:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 372:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       if (req_status == USBH_OK)
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 8
+
+
+ 373:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 374:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         CDC_Handle->state = CDC_IDLE_STATE;
+ 375:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 376:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         if ((CDC_Handle->LineCoding.b.bCharFormat == CDC_Handle->pUserLineCoding->b.bCharFormat) &&
+ 377:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****             (CDC_Handle->LineCoding.b.bDataBits == CDC_Handle->pUserLineCoding->b.bDataBits) &&
+ 378:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****             (CDC_Handle->LineCoding.b.bParityType == CDC_Handle->pUserLineCoding->b.bParityType) &&
+ 379:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****             (CDC_Handle->LineCoding.b.dwDTERate == CDC_Handle->pUserLineCoding->b.dwDTERate))
+ 380:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 381:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           USBH_CDC_LineCodingChanged(phost);
+ 382:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 383:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 384:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       else
+ 385:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 386:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         if (req_status != USBH_BUSY)
+ 387:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 388:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->state = CDC_ERROR_STATE;
+ 389:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 390:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 391:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 392:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 393:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     case CDC_TRANSFER_DATA:
+ 394:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       CDC_ProcessTransmission(phost);
+ 395:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       CDC_ProcessReception(phost);
+ 396:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 397:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 398:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     case CDC_ERROR_STATE:
+ 399:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       req_status = USBH_ClrFeature(phost, 0x00U);
+ 400:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 401:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       if (req_status == USBH_OK)
+ 402:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 403:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         /*Change the state to waiting*/
+ 404:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         CDC_Handle->state = CDC_IDLE_STATE;
+ 405:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 406:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 407:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 408:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     default:
+ 409:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 410:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 411:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 412:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 413:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return status;
+ 414:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 415:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 416:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 417:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  USBH_CDC_SOFProcess
+ 418:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *         The function is for managing SOF callback
+ 419:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  phost: Host handle
+ 420:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval USBH Status
+ 421:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 422:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef USBH_CDC_SOFProcess(USBH_HandleTypeDef *phost)
+ 423:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+  29              		.loc 1 423 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+ 424:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /* Prevent unused argument(s) compilation warning */
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 9
+
+
+ 425:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   UNUSED(phost);
+  34              		.loc 1 425 3 view .LVU1
+ 426:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 427:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return USBH_OK;
+  35              		.loc 1 427 3 view .LVU2
+ 428:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+  36              		.loc 1 428 1 is_stmt 0 view .LVU3
+  37 0000 0020     		movs	r0, #0
+  38              	.LVL1:
+  39              		.loc 1 428 1 view .LVU4
+  40 0002 7047     		bx	lr
+  41              		.cfi_endproc
+  42              	.LFE153:
+  44              		.section	.text.SetLineCoding,"ax",%progbits
+  45              		.align	1
+  46              		.syntax unified
+  47              		.thumb
+  48              		.thumb_func
+  49              		.fpu fpv5-sp-d16
+  51              	SetLineCoding:
+  52              	.LVL2:
+  53              	.LFB156:
+ 429:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 430:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 431:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 432:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  USBH_CDC_Stop
+ 433:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *         Stop current CDC Transmission
+ 434:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  phost: Host handle
+ 435:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval USBH Status
+ 436:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 437:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** USBH_StatusTypeDef  USBH_CDC_Stop(USBH_HandleTypeDef *phost)
+ 438:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 439:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 440:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 441:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (phost->gState == HOST_CLASS)
+ 442:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 443:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->state = CDC_IDLE_STATE;
+ 444:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 445:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_ClosePipe(phost, CDC_Handle->CommItf.NotifPipe);
+ 446:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_ClosePipe(phost, CDC_Handle->DataItf.InPipe);
+ 447:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_ClosePipe(phost, CDC_Handle->DataItf.OutPipe);
+ 448:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 449:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return USBH_OK;
+ 450:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 451:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 452:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  This request allows the host to find out the currently
+ 453:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   *         configured line coding.
+ 454:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  pdev: Selected device
+ 455:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval USBH_StatusTypeDef : USB ctl xfer status
+ 456:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 457:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef GetLineCoding(USBH_HandleTypeDef *phost, CDC_LineCodingTypeDef *linecodin
+ 458:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 459:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 460:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.bmRequestType = USB_D2H | USB_REQ_TYPE_CLASS | \
+ 461:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                          USB_REQ_RECIPIENT_INTERFACE;
+ 462:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 463:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.bRequest = CDC_GET_LINE_CODING;
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 10
+
+
+ 464:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wValue.w = 0U;
+ 465:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wIndex.w = 0U;
+ 466:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wLength.w = LINE_CODING_STRUCTURE_SIZE;
+ 467:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 468:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return USBH_CtlReq(phost, linecoding->Array, LINE_CODING_STRUCTURE_SIZE);
+ 469:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 470:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 471:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 472:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 473:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  This request allows the host to specify typical asynchronous
+ 474:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * line-character formatting properties
+ 475:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * This request applies to asynchronous byte stream data class interfaces
+ 476:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * and endpoints
+ 477:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  pdev: Selected device
+ 478:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval USBH_StatusTypeDef : USB ctl xfer status
+ 479:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 480:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static USBH_StatusTypeDef SetLineCoding(USBH_HandleTypeDef *phost,
+ 481:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                         CDC_LineCodingTypeDef *linecoding)
+ 482:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+  54              		.loc 1 482 1 is_stmt 1 view -0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58              		.loc 1 482 1 is_stmt 0 view .LVU6
+  59 0000 08B5     		push	{r3, lr}
+  60              	.LCFI0:
+  61              		.cfi_def_cfa_offset 8
+  62              		.cfi_offset 3, -8
+  63              		.cfi_offset 14, -4
+ 483:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.bmRequestType = USB_H2D | USB_REQ_TYPE_CLASS |
+  64              		.loc 1 483 3 is_stmt 1 view .LVU7
+  65              		.loc 1 483 40 is_stmt 0 view .LVU8
+  66 0002 2122     		movs	r2, #33
+  67 0004 0274     		strb	r2, [r0, #16]
+ 484:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                          USB_REQ_RECIPIENT_INTERFACE;
+ 485:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 486:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.bRequest = CDC_SET_LINE_CODING;
+  68              		.loc 1 486 3 is_stmt 1 view .LVU9
+  69              		.loc 1 486 35 is_stmt 0 view .LVU10
+  70 0006 2022     		movs	r2, #32
+  71 0008 4274     		strb	r2, [r0, #17]
+ 487:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wValue.w = 0U;
+  72              		.loc 1 487 3 is_stmt 1 view .LVU11
+  73              		.loc 1 487 35 is_stmt 0 view .LVU12
+  74 000a 0022     		movs	r2, #0
+  75 000c 4282     		strh	r2, [r0, #18]	@ movhi
+ 488:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 489:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wIndex.w = 0U;
+  76              		.loc 1 489 3 is_stmt 1 view .LVU13
+  77              		.loc 1 489 35 is_stmt 0 view .LVU14
+  78 000e 8282     		strh	r2, [r0, #20]	@ movhi
+ 490:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 491:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wLength.w = LINE_CODING_STRUCTURE_SIZE;
+  79              		.loc 1 491 3 is_stmt 1 view .LVU15
+  80              		.loc 1 491 36 is_stmt 0 view .LVU16
+  81 0010 0722     		movs	r2, #7
+  82 0012 C282     		strh	r2, [r0, #22]	@ movhi
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 11
+
+
+ 492:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 493:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return USBH_CtlReq(phost, linecoding->Array, LINE_CODING_STRUCTURE_SIZE);
+  83              		.loc 1 493 3 is_stmt 1 view .LVU17
+  84              		.loc 1 493 10 is_stmt 0 view .LVU18
+  85 0014 FFF7FEFF 		bl	USBH_CtlReq
+  86              	.LVL3:
+ 494:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+  87              		.loc 1 494 1 view .LVU19
+  88 0018 08BD     		pop	{r3, pc}
+  89              		.cfi_endproc
+  90              	.LFE156:
+  92              		.section	.text.GetLineCoding,"ax",%progbits
+  93              		.align	1
+  94              		.syntax unified
+  95              		.thumb
+  96              		.thumb_func
+  97              		.fpu fpv5-sp-d16
+  99              	GetLineCoding:
+ 100              	.LVL4:
+ 101              	.LFB155:
+ 458:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 102              		.loc 1 458 1 is_stmt 1 view -0
+ 103              		.cfi_startproc
+ 104              		@ args = 0, pretend = 0, frame = 0
+ 105              		@ frame_needed = 0, uses_anonymous_args = 0
+ 458:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 106              		.loc 1 458 1 is_stmt 0 view .LVU21
+ 107 0000 08B5     		push	{r3, lr}
+ 108              	.LCFI1:
+ 109              		.cfi_def_cfa_offset 8
+ 110              		.cfi_offset 3, -8
+ 111              		.cfi_offset 14, -4
+ 460:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                          USB_REQ_RECIPIENT_INTERFACE;
+ 112              		.loc 1 460 3 is_stmt 1 view .LVU22
+ 460:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                          USB_REQ_RECIPIENT_INTERFACE;
+ 113              		.loc 1 460 40 is_stmt 0 view .LVU23
+ 114 0002 A122     		movs	r2, #161
+ 115 0004 0274     		strb	r2, [r0, #16]
+ 463:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wValue.w = 0U;
+ 116              		.loc 1 463 3 is_stmt 1 view .LVU24
+ 463:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wValue.w = 0U;
+ 117              		.loc 1 463 35 is_stmt 0 view .LVU25
+ 118 0006 2122     		movs	r2, #33
+ 119 0008 4274     		strb	r2, [r0, #17]
+ 464:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wIndex.w = 0U;
+ 120              		.loc 1 464 3 is_stmt 1 view .LVU26
+ 464:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wIndex.w = 0U;
+ 121              		.loc 1 464 35 is_stmt 0 view .LVU27
+ 122 000a 0022     		movs	r2, #0
+ 123 000c 4282     		strh	r2, [r0, #18]	@ movhi
+ 465:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wLength.w = LINE_CODING_STRUCTURE_SIZE;
+ 124              		.loc 1 465 3 is_stmt 1 view .LVU28
+ 465:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   phost->Control.setup.b.wLength.w = LINE_CODING_STRUCTURE_SIZE;
+ 125              		.loc 1 465 35 is_stmt 0 view .LVU29
+ 126 000e 8282     		strh	r2, [r0, #20]	@ movhi
+ 466:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 127              		.loc 1 466 3 is_stmt 1 view .LVU30
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 12
+
+
+ 466:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 128              		.loc 1 466 36 is_stmt 0 view .LVU31
+ 129 0010 0722     		movs	r2, #7
+ 130 0012 C282     		strh	r2, [r0, #22]	@ movhi
+ 468:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 131              		.loc 1 468 3 is_stmt 1 view .LVU32
+ 468:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 132              		.loc 1 468 10 is_stmt 0 view .LVU33
+ 133 0014 FFF7FEFF 		bl	USBH_CtlReq
+ 134              	.LVL5:
+ 469:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 135              		.loc 1 469 1 view .LVU34
+ 136 0018 08BD     		pop	{r3, pc}
+ 137              		.cfi_endproc
+ 138              	.LFE155:
+ 140              		.section	.text.USBH_CDC_ClassRequest,"ax",%progbits
+ 141              		.align	1
+ 142              		.syntax unified
+ 143              		.thumb
+ 144              		.thumb_func
+ 145              		.fpu fpv5-sp-d16
+ 147              	USBH_CDC_ClassRequest:
+ 148              	.LVL6:
+ 149              	.LFB151:
+ 309:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef status;
+ 150              		.loc 1 309 1 is_stmt 1 view -0
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 0
+ 153              		@ frame_needed = 0, uses_anonymous_args = 0
+ 309:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef status;
+ 154              		.loc 1 309 1 is_stmt 0 view .LVU36
+ 155 0000 38B5     		push	{r3, r4, r5, lr}
+ 156              	.LCFI2:
+ 157              		.cfi_def_cfa_offset 16
+ 158              		.cfi_offset 3, -16
+ 159              		.cfi_offset 4, -12
+ 160              		.cfi_offset 5, -8
+ 161              		.cfi_offset 14, -4
+ 162 0002 0446     		mov	r4, r0
+ 310:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 163              		.loc 1 310 3 is_stmt 1 view .LVU37
+ 311:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 164              		.loc 1 311 3 view .LVU38
+ 311:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 165              		.loc 1 311 62 is_stmt 0 view .LVU39
+ 166 0004 D0F87C33 		ldr	r3, [r0, #892]
+ 311:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 167              		.loc 1 311 22 view .LVU40
+ 168 0008 D969     		ldr	r1, [r3, #28]
+ 169              	.LVL7:
+ 314:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (status == USBH_OK)
+ 170              		.loc 1 314 3 is_stmt 1 view .LVU41
+ 314:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (status == USBH_OK)
+ 171              		.loc 1 314 12 is_stmt 0 view .LVU42
+ 172 000a 4031     		adds	r1, r1, #64
+ 173              	.LVL8:
+ 314:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (status == USBH_OK)
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 13
+
+
+ 174              		.loc 1 314 12 view .LVU43
+ 175 000c FFF7FEFF 		bl	GetLineCoding
+ 176              	.LVL9:
+ 315:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 177              		.loc 1 315 3 is_stmt 1 view .LVU44
+ 315:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 178              		.loc 1 315 6 is_stmt 0 view .LVU45
+ 179 0010 0546     		mov	r5, r0
+ 180 0012 20B9     		cbnz	r0, .L7
+ 317:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 181              		.loc 1 317 5 is_stmt 1 view .LVU46
+ 317:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 182              		.loc 1 317 10 is_stmt 0 view .LVU47
+ 183 0014 D4F8D433 		ldr	r3, [r4, #980]
+ 317:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 184              		.loc 1 317 5 view .LVU48
+ 185 0018 0221     		movs	r1, #2
+ 186 001a 2046     		mov	r0, r4
+ 187              	.LVL10:
+ 317:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 188              		.loc 1 317 5 view .LVU49
+ 189 001c 9847     		blx	r3
+ 190              	.LVL11:
+ 191              	.L7:
+ 326:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 192              		.loc 1 326 3 is_stmt 1 view .LVU50
+ 328:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 193              		.loc 1 328 3 view .LVU51
+ 329:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 194              		.loc 1 329 1 is_stmt 0 view .LVU52
+ 195 001e 2846     		mov	r0, r5
+ 196 0020 38BD     		pop	{r3, r4, r5, pc}
+ 329:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 197              		.loc 1 329 1 view .LVU53
+ 198              		.cfi_endproc
+ 199              	.LFE151:
+ 201              		.section	.text.USBH_CDC_InterfaceDeInit,"ax",%progbits
+ 202              		.align	1
+ 203              		.syntax unified
+ 204              		.thumb
+ 205              		.thumb_func
+ 206              		.fpu fpv5-sp-d16
+ 208              	USBH_CDC_InterfaceDeInit:
+ 209              	.LVL12:
+ 210              	.LFB150:
+ 268:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 211              		.loc 1 268 1 is_stmt 1 view -0
+ 212              		.cfi_startproc
+ 213              		@ args = 0, pretend = 0, frame = 0
+ 214              		@ frame_needed = 0, uses_anonymous_args = 0
+ 268:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 215              		.loc 1 268 1 is_stmt 0 view .LVU55
+ 216 0000 38B5     		push	{r3, r4, r5, lr}
+ 217              	.LCFI3:
+ 218              		.cfi_def_cfa_offset 16
+ 219              		.cfi_offset 3, -16
+ 220              		.cfi_offset 4, -12
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 14
+
+
+ 221              		.cfi_offset 5, -8
+ 222              		.cfi_offset 14, -4
+ 223 0002 0446     		mov	r4, r0
+ 269:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 224              		.loc 1 269 3 is_stmt 1 view .LVU56
+ 269:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 225              		.loc 1 269 62 is_stmt 0 view .LVU57
+ 226 0004 D0F87C33 		ldr	r3, [r0, #892]
+ 269:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 227              		.loc 1 269 22 view .LVU58
+ 228 0008 DD69     		ldr	r5, [r3, #28]
+ 229              	.LVL13:
+ 271:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 230              		.loc 1 271 3 is_stmt 1 view .LVU59
+ 271:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 231              		.loc 1 271 26 is_stmt 0 view .LVU60
+ 232 000a 2978     		ldrb	r1, [r5]	@ zero_extendqisi2
+ 271:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 233              		.loc 1 271 6 view .LVU61
+ 234 000c 79B9     		cbnz	r1, .L15
+ 235              	.LVL14:
+ 236              	.L10:
+ 278:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 237              		.loc 1 278 3 is_stmt 1 view .LVU62
+ 278:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 238              		.loc 1 278 26 is_stmt 0 view .LVU63
+ 239 000e 297B     		ldrb	r1, [r5, #12]	@ zero_extendqisi2
+ 278:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 240              		.loc 1 278 6 view .LVU64
+ 241 0010 B1B9     		cbnz	r1, .L16
+ 242              	.L11:
+ 285:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 243              		.loc 1 285 3 is_stmt 1 view .LVU65
+ 285:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 244              		.loc 1 285 26 is_stmt 0 view .LVU66
+ 245 0012 697B     		ldrb	r1, [r5, #13]	@ zero_extendqisi2
+ 285:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 246              		.loc 1 285 6 view .LVU67
+ 247 0014 F1B9     		cbnz	r1, .L17
+ 248              	.L12:
+ 292:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 249              		.loc 1 292 3 is_stmt 1 view .LVU68
+ 292:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 250              		.loc 1 292 12 is_stmt 0 view .LVU69
+ 251 0016 D4F87C33 		ldr	r3, [r4, #892]
+ 292:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 252              		.loc 1 292 26 view .LVU70
+ 253 001a D869     		ldr	r0, [r3, #28]
+ 292:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 254              		.loc 1 292 6 view .LVU71
+ 255 001c 28B1     		cbz	r0, .L13
+ 294:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     phost->pActiveClass->pData = 0U;
+ 256              		.loc 1 294 5 is_stmt 1 view .LVU72
+ 257 001e FFF7FEFF 		bl	free
+ 258              	.LVL15:
+ 295:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 259              		.loc 1 295 5 view .LVU73
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 15
+
+
+ 295:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 260              		.loc 1 295 10 is_stmt 0 view .LVU74
+ 261 0022 D4F87C33 		ldr	r3, [r4, #892]
+ 295:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 262              		.loc 1 295 32 view .LVU75
+ 263 0026 0022     		movs	r2, #0
+ 264 0028 DA61     		str	r2, [r3, #28]
+ 265              	.L13:
+ 298:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 266              		.loc 1 298 3 is_stmt 1 view .LVU76
+ 299:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 267              		.loc 1 299 1 is_stmt 0 view .LVU77
+ 268 002a 0020     		movs	r0, #0
+ 269 002c 38BD     		pop	{r3, r4, r5, pc}
+ 270              	.LVL16:
+ 271              	.L15:
+ 273:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_FreePipe(phost, CDC_Handle->CommItf.NotifPipe);
+ 272              		.loc 1 273 5 is_stmt 1 view .LVU78
+ 273 002e FFF7FEFF 		bl	USBH_ClosePipe
+ 274              	.LVL17:
+ 274:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->CommItf.NotifPipe = 0U;     /* Reset the Channel as Free */
+ 275              		.loc 1 274 5 view .LVU79
+ 276 0032 2978     		ldrb	r1, [r5]	@ zero_extendqisi2
+ 277 0034 2046     		mov	r0, r4
+ 278 0036 FFF7FEFF 		bl	USBH_FreePipe
+ 279              	.LVL18:
+ 275:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 280              		.loc 1 275 5 view .LVU80
+ 275:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 281              		.loc 1 275 35 is_stmt 0 view .LVU81
+ 282 003a 0023     		movs	r3, #0
+ 283 003c 2B70     		strb	r3, [r5]
+ 284 003e E6E7     		b	.L10
+ 285              	.L16:
+ 280:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_FreePipe(phost, CDC_Handle->DataItf.InPipe);
+ 286              		.loc 1 280 5 is_stmt 1 view .LVU82
+ 287 0040 2046     		mov	r0, r4
+ 288 0042 FFF7FEFF 		bl	USBH_ClosePipe
+ 289              	.LVL19:
+ 281:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InPipe = 0U;     /* Reset the Channel as Free */
+ 290              		.loc 1 281 5 view .LVU83
+ 291 0046 297B     		ldrb	r1, [r5, #12]	@ zero_extendqisi2
+ 292 0048 2046     		mov	r0, r4
+ 293 004a FFF7FEFF 		bl	USBH_FreePipe
+ 294              	.LVL20:
+ 282:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 295              		.loc 1 282 5 view .LVU84
+ 282:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 296              		.loc 1 282 32 is_stmt 0 view .LVU85
+ 297 004e 0023     		movs	r3, #0
+ 298 0050 2B73     		strb	r3, [r5, #12]
+ 299 0052 DEE7     		b	.L11
+ 300              	.L17:
+ 287:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_FreePipe(phost, CDC_Handle->DataItf.OutPipe);
+ 301              		.loc 1 287 5 is_stmt 1 view .LVU86
+ 302 0054 2046     		mov	r0, r4
+ 303 0056 FFF7FEFF 		bl	USBH_ClosePipe
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 16
+
+
+ 304              	.LVL21:
+ 288:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutPipe = 0U;    /* Reset the Channel as Free */
+ 305              		.loc 1 288 5 view .LVU87
+ 306 005a 697B     		ldrb	r1, [r5, #13]	@ zero_extendqisi2
+ 307 005c 2046     		mov	r0, r4
+ 308 005e FFF7FEFF 		bl	USBH_FreePipe
+ 309              	.LVL22:
+ 289:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 310              		.loc 1 289 5 view .LVU88
+ 289:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 311              		.loc 1 289 33 is_stmt 0 view .LVU89
+ 312 0062 0023     		movs	r3, #0
+ 313 0064 6B73     		strb	r3, [r5, #13]
+ 314 0066 D6E7     		b	.L12
+ 315              		.cfi_endproc
+ 316              	.LFE150:
+ 318              		.section	.text.USBH_CDC_InterfaceInit,"ax",%progbits
+ 319              		.align	1
+ 320              		.syntax unified
+ 321              		.thumb
+ 322              		.thumb_func
+ 323              		.fpu fpv5-sp-d16
+ 325              	USBH_CDC_InterfaceInit:
+ 326              	.LVL23:
+ 327              	.LFB149:
+ 152:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 328              		.loc 1 152 1 is_stmt 1 view -0
+ 329              		.cfi_startproc
+ 330              		@ args = 0, pretend = 0, frame = 0
+ 331              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 332              		.loc 1 152 1 is_stmt 0 view .LVU91
+ 333 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 334              	.LCFI4:
+ 335              		.cfi_def_cfa_offset 20
+ 336              		.cfi_offset 4, -20
+ 337              		.cfi_offset 5, -16
+ 338              		.cfi_offset 6, -12
+ 339              		.cfi_offset 7, -8
+ 340              		.cfi_offset 14, -4
+ 341 0002 85B0     		sub	sp, sp, #20
+ 342              	.LCFI5:
+ 343              		.cfi_def_cfa_offset 40
+ 344 0004 0446     		mov	r4, r0
+ 154:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   uint8_t interface;
+ 345              		.loc 1 154 3 is_stmt 1 view .LVU92
+ 155:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle;
+ 346              		.loc 1 155 3 view .LVU93
+ 156:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 347              		.loc 1 156 3 view .LVU94
+ 158:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                  ABSTRACT_CONTROL_MODEL, COMMON_AT_COMMAND);
+ 348              		.loc 1 158 3 view .LVU95
+ 158:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                  ABSTRACT_CONTROL_MODEL, COMMON_AT_COMMAND);
+ 349              		.loc 1 158 15 is_stmt 0 view .LVU96
+ 350 0006 0123     		movs	r3, #1
+ 351 0008 0222     		movs	r2, #2
+ 352 000a 1146     		mov	r1, r2
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 17
+
+
+ 353 000c FFF7FEFF 		bl	USBH_FindInterface
+ 354              	.LVL24:
+ 161:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 355              		.loc 1 161 3 is_stmt 1 view .LVU97
+ 161:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 356              		.loc 1 161 6 is_stmt 0 view .LVU98
+ 357 0010 0128     		cmp	r0, #1
+ 358 0012 00F2AE80 		bhi	.L25
+ 359 0016 0646     		mov	r6, r0
+ 167:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 360              		.loc 1 167 3 is_stmt 1 view .LVU99
+ 167:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 361              		.loc 1 167 12 is_stmt 0 view .LVU100
+ 362 0018 0146     		mov	r1, r0
+ 363 001a 2046     		mov	r0, r4
+ 364              	.LVL25:
+ 167:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 365              		.loc 1 167 12 view .LVU101
+ 366 001c FFF7FEFF 		bl	USBH_SelectInterface
+ 367              	.LVL26:
+ 169:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 368              		.loc 1 169 3 is_stmt 1 view .LVU102
+ 169:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 369              		.loc 1 169 6 is_stmt 0 view .LVU103
+ 370 0020 0746     		mov	r7, r0
+ 371 0022 0028     		cmp	r0, #0
+ 372 0024 40F0A980 		bne	.L26
+ 174:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 373              		.loc 1 174 3 is_stmt 1 view .LVU104
+ 174:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 374              		.loc 1 174 8 is_stmt 0 view .LVU105
+ 375 0028 D4F87C53 		ldr	r5, [r4, #892]
+ 174:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 376              		.loc 1 174 53 view .LVU106
+ 377 002c 5020     		movs	r0, #80
+ 378              	.LVL27:
+ 174:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 379              		.loc 1 174 53 view .LVU107
+ 380 002e FFF7FEFF 		bl	malloc
+ 381              	.LVL28:
+ 174:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 382              		.loc 1 174 30 view .LVU108
+ 383 0032 E861     		str	r0, [r5, #28]
+ 175:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 384              		.loc 1 175 3 is_stmt 1 view .LVU109
+ 175:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 385              		.loc 1 175 43 is_stmt 0 view .LVU110
+ 386 0034 D4F87C33 		ldr	r3, [r4, #892]
+ 175:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 387              		.loc 1 175 14 view .LVU111
+ 388 0038 DD69     		ldr	r5, [r3, #28]
+ 389              	.LVL29:
+ 177:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 390              		.loc 1 177 3 is_stmt 1 view .LVU112
+ 177:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 391              		.loc 1 177 6 is_stmt 0 view .LVU113
+ 392 003a 002D     		cmp	r5, #0
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 18
+
+
+ 393 003c 00F09F80 		beq	.L27
+ 184:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 394              		.loc 1 184 3 is_stmt 1 view .LVU114
+ 395 0040 5022     		movs	r2, #80
+ 396 0042 0021     		movs	r1, #0
+ 397 0044 2846     		mov	r0, r5
+ 398 0046 FFF7FEFF 		bl	memset
+ 399              	.LVL30:
+ 187:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 400              		.loc 1 187 3 view .LVU115
+ 187:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 401              		.loc 1 187 59 is_stmt 0 view .LVU116
+ 402 004a 1A23     		movs	r3, #26
+ 403 004c 03FB0643 		mla	r3, r3, r6, r4
+ 404 0050 93F84E23 		ldrb	r2, [r3, #846]	@ zero_extendqisi2
+ 187:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 405              		.loc 1 187 7 view .LVU117
+ 406 0054 93F94E33 		ldrsb	r3, [r3, #846]
+ 187:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 407              		.loc 1 187 6 view .LVU118
+ 408 0058 002B     		cmp	r3, #0
+ 409 005a 72DB     		blt	.L30
+ 410              	.L20:
+ 194:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 411              		.loc 1 194 3 is_stmt 1 view .LVU119
+ 194:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 412              		.loc 1 194 35 is_stmt 0 view .LVU120
+ 413 005c 6978     		ldrb	r1, [r5, #1]	@ zero_extendqisi2
+ 414 005e 2046     		mov	r0, r4
+ 415 0060 FFF7FEFF 		bl	USBH_AllocPipe
+ 416              	.LVL31:
+ 417 0064 0146     		mov	r1, r0
+ 194:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 418              		.loc 1 194 33 view .LVU121
+ 419 0066 2870     		strb	r0, [r5]
+ 197:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                 phost->device.address, phost->device.speed, USB_EP_TYPE_INTR,
+ 420              		.loc 1 197 3 is_stmt 1 view .LVU122
+ 421 0068 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 422 006a 6B89     		ldrh	r3, [r5, #10]
+ 423 006c 0293     		str	r3, [sp, #8]
+ 424 006e 0323     		movs	r3, #3
+ 425 0070 0193     		str	r3, [sp, #4]
+ 426 0072 94F81D33 		ldrb	r3, [r4, #797]	@ zero_extendqisi2
+ 427 0076 0093     		str	r3, [sp]
+ 428 0078 94F81C33 		ldrb	r3, [r4, #796]	@ zero_extendqisi2
+ 429 007c 2046     		mov	r0, r4
+ 430 007e FFF7FEFF 		bl	USBH_OpenPipe
+ 431              	.LVL32:
+ 201:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 432              		.loc 1 201 3 view .LVU123
+ 433 0082 0022     		movs	r2, #0
+ 434 0084 2978     		ldrb	r1, [r5]	@ zero_extendqisi2
+ 435 0086 2046     		mov	r0, r4
+ 436 0088 FFF7FEFF 		bl	USBH_LL_SetToggle
+ 437              	.LVL33:
+ 203:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                  RESERVED, NO_CLASS_SPECIFIC_PROTOCOL_CODE);
+ 438              		.loc 1 203 3 view .LVU124
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 19
+
+
+ 203:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                  RESERVED, NO_CLASS_SPECIFIC_PROTOCOL_CODE);
+ 439              		.loc 1 203 15 is_stmt 0 view .LVU125
+ 440 008c 0023     		movs	r3, #0
+ 441 008e 1A46     		mov	r2, r3
+ 442 0090 0A21     		movs	r1, #10
+ 443 0092 2046     		mov	r0, r4
+ 444 0094 FFF7FEFF 		bl	USBH_FindInterface
+ 445              	.LVL34:
+ 206:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 446              		.loc 1 206 3 is_stmt 1 view .LVU126
+ 206:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 447              		.loc 1 206 6 is_stmt 0 view .LVU127
+ 448 0098 0128     		cmp	r0, #1
+ 449 009a 72D8     		bhi	.L28
+ 213:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 450              		.loc 1 213 3 is_stmt 1 view .LVU128
+ 213:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 451              		.loc 1 213 59 is_stmt 0 view .LVU129
+ 452 009c 1A23     		movs	r3, #26
+ 453 009e 03FB0043 		mla	r3, r3, r0, r4
+ 454 00a2 93F84E23 		ldrb	r2, [r3, #846]	@ zero_extendqisi2
+ 213:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 455              		.loc 1 213 7 view .LVU130
+ 456 00a6 93F94E33 		ldrsb	r3, [r3, #846]
+ 213:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 457              		.loc 1 213 6 view .LVU131
+ 458 00aa 002B     		cmp	r3, #0
+ 459 00ac 51DB     		blt	.L31
+ 220:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].wMaxPacke
+ 460              		.loc 1 220 5 is_stmt 1 view .LVU132
+ 220:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].wMaxPacke
+ 461              		.loc 1 220 31 is_stmt 0 view .LVU133
+ 462 00ae AA73     		strb	r2, [r5, #14]
+ 221:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 463              		.loc 1 221 5 is_stmt 1 view .LVU134
+ 221:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 464              		.loc 1 221 90 is_stmt 0 view .LVU135
+ 465 00b0 1A23     		movs	r3, #26
+ 466 00b2 03FB0043 		mla	r3, r3, r0, r4
+ 467 00b6 B3F85033 		ldrh	r3, [r3, #848]
+ 221:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 468              		.loc 1 221 36 view .LVU136
+ 469 00ba 2B83     		strh	r3, [r5, #24]	@ movhi
+ 470              	.L22:
+ 224:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 471              		.loc 1 224 3 is_stmt 1 view .LVU137
+ 224:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 472              		.loc 1 224 59 is_stmt 0 view .LVU138
+ 473 00bc 1A23     		movs	r3, #26
+ 474 00be 03FB0043 		mla	r3, r3, r0, r4
+ 475 00c2 93F85623 		ldrb	r2, [r3, #854]	@ zero_extendqisi2
+ 224:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 476              		.loc 1 224 7 view .LVU139
+ 477 00c6 93F95633 		ldrsb	r3, [r3, #854]
+ 224:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 478              		.loc 1 224 6 view .LVU140
+ 479 00ca 002B     		cmp	r3, #0
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 20
+
+
+ 480 00cc 49DB     		blt	.L32
+ 231:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutEpSize = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[1].wMaxPacket
+ 481              		.loc 1 231 5 is_stmt 1 view .LVU141
+ 231:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.OutEpSize = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[1].wMaxPacket
+ 482              		.loc 1 231 31 is_stmt 0 view .LVU142
+ 483 00ce AA73     		strb	r2, [r5, #14]
+ 232:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 484              		.loc 1 232 5 is_stmt 1 view .LVU143
+ 232:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 485              		.loc 1 232 89 is_stmt 0 view .LVU144
+ 486 00d0 1A23     		movs	r3, #26
+ 487 00d2 03FB0040 		mla	r0, r3, r0, r4
+ 488              	.LVL35:
+ 232:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 489              		.loc 1 232 89 view .LVU145
+ 490 00d6 B0F85833 		ldrh	r3, [r0, #856]
+ 232:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 491              		.loc 1 232 35 view .LVU146
+ 492 00da 2B83     		strh	r3, [r5, #24]	@ movhi
+ 493              	.L24:
+ 236:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 494              		.loc 1 236 3 is_stmt 1 view .LVU147
+ 236:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 495              		.loc 1 236 33 is_stmt 0 view .LVU148
+ 496 00dc A97B     		ldrb	r1, [r5, #14]	@ zero_extendqisi2
+ 497 00de 2046     		mov	r0, r4
+ 498 00e0 FFF7FEFF 		bl	USBH_AllocPipe
+ 499              	.LVL36:
+ 236:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 500              		.loc 1 236 31 view .LVU149
+ 501 00e4 6873     		strb	r0, [r5, #13]
+ 239:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 502              		.loc 1 239 3 is_stmt 1 view .LVU150
+ 239:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 503              		.loc 1 239 32 is_stmt 0 view .LVU151
+ 504 00e6 E97B     		ldrb	r1, [r5, #15]	@ zero_extendqisi2
+ 505 00e8 2046     		mov	r0, r4
+ 506 00ea FFF7FEFF 		bl	USBH_AllocPipe
+ 507              	.LVL37:
+ 239:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 508              		.loc 1 239 30 view .LVU152
+ 509 00ee 2873     		strb	r0, [r5, #12]
+ 242:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                 phost->device.address, phost->device.speed, USB_EP_TYPE_BULK,
+ 510              		.loc 1 242 3 is_stmt 1 view .LVU153
+ 511 00f0 AA7B     		ldrb	r2, [r5, #14]	@ zero_extendqisi2
+ 512 00f2 697B     		ldrb	r1, [r5, #13]	@ zero_extendqisi2
+ 513 00f4 2B8B     		ldrh	r3, [r5, #24]
+ 514 00f6 0293     		str	r3, [sp, #8]
+ 515 00f8 0226     		movs	r6, #2
+ 516 00fa 0196     		str	r6, [sp, #4]
+ 517 00fc 94F81D33 		ldrb	r3, [r4, #797]	@ zero_extendqisi2
+ 518 0100 0093     		str	r3, [sp]
+ 519 0102 94F81C33 		ldrb	r3, [r4, #796]	@ zero_extendqisi2
+ 520 0106 2046     		mov	r0, r4
+ 521 0108 FFF7FEFF 		bl	USBH_OpenPipe
+ 522              	.LVL38:
+ 247:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                 phost->device.address, phost->device.speed, USB_EP_TYPE_BULK,
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 21
+
+
+ 523              		.loc 1 247 3 view .LVU154
+ 524 010c EA7B     		ldrb	r2, [r5, #15]	@ zero_extendqisi2
+ 525 010e 297B     		ldrb	r1, [r5, #12]	@ zero_extendqisi2
+ 526 0110 6B8B     		ldrh	r3, [r5, #26]
+ 527 0112 0293     		str	r3, [sp, #8]
+ 528 0114 0196     		str	r6, [sp, #4]
+ 529 0116 94F81D33 		ldrb	r3, [r4, #797]	@ zero_extendqisi2
+ 530 011a 0093     		str	r3, [sp]
+ 531 011c 94F81C33 		ldrb	r3, [r4, #796]	@ zero_extendqisi2
+ 532 0120 2046     		mov	r0, r4
+ 533 0122 FFF7FEFF 		bl	USBH_OpenPipe
+ 534              	.LVL39:
+ 251:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 535              		.loc 1 251 3 view .LVU155
+ 251:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 536              		.loc 1 251 21 is_stmt 0 view .LVU156
+ 537 0126 0026     		movs	r6, #0
+ 538 0128 85F84C60 		strb	r6, [r5, #76]
+ 253:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_LL_SetToggle(phost, CDC_Handle->DataItf.InPipe, 0U);
+ 539              		.loc 1 253 3 is_stmt 1 view .LVU157
+ 540 012c 3246     		mov	r2, r6
+ 541 012e 697B     		ldrb	r1, [r5, #13]	@ zero_extendqisi2
+ 542 0130 2046     		mov	r0, r4
+ 543 0132 FFF7FEFF 		bl	USBH_LL_SetToggle
+ 544              	.LVL40:
+ 254:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 545              		.loc 1 254 3 view .LVU158
+ 546 0136 3246     		mov	r2, r6
+ 547 0138 297B     		ldrb	r1, [r5, #12]	@ zero_extendqisi2
+ 548 013a 2046     		mov	r0, r4
+ 549 013c FFF7FEFF 		bl	USBH_LL_SetToggle
+ 550              	.LVL41:
+ 256:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 551              		.loc 1 256 3 view .LVU159
+ 256:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 552              		.loc 1 256 10 is_stmt 0 view .LVU160
+ 553 0140 18E0     		b	.L19
+ 554              	.L30:
+ 189:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->CommItf.NotifEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].wMaxPac
+ 555              		.loc 1 189 5 is_stmt 1 view .LVU161
+ 189:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->CommItf.NotifEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].wMaxPac
+ 556              		.loc 1 189 33 is_stmt 0 view .LVU162
+ 557 0142 6A70     		strb	r2, [r5, #1]
+ 190:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 558              		.loc 1 190 5 is_stmt 1 view .LVU163
+ 190:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 559              		.loc 1 190 92 is_stmt 0 view .LVU164
+ 560 0144 1A20     		movs	r0, #26
+ 561 0146 00FB0646 		mla	r6, r0, r6, r4
+ 562 014a B6F85033 		ldrh	r3, [r6, #848]
+ 190:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 563              		.loc 1 190 38 view .LVU165
+ 564 014e 6B81     		strh	r3, [r5, #10]	@ movhi
+ 565 0150 84E7     		b	.L20
+ 566              	.LVL42:
+ 567              	.L31:
+ 215:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].wMaxPacket
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 22
+
+
+ 568              		.loc 1 215 5 is_stmt 1 view .LVU166
+ 215:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[0].wMaxPacket
+ 569              		.loc 1 215 30 is_stmt 0 view .LVU167
+ 570 0152 EA73     		strb	r2, [r5, #15]
+ 216:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 571              		.loc 1 216 5 is_stmt 1 view .LVU168
+ 216:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 572              		.loc 1 216 89 is_stmt 0 view .LVU169
+ 573 0154 1A23     		movs	r3, #26
+ 574 0156 03FB0043 		mla	r3, r3, r0, r4
+ 575 015a B3F85033 		ldrh	r3, [r3, #848]
+ 216:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 576              		.loc 1 216 35 view .LVU170
+ 577 015e 6B83     		strh	r3, [r5, #26]	@ movhi
+ 578 0160 ACE7     		b	.L22
+ 579              	.L32:
+ 226:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[1].wMaxPacket
+ 580              		.loc 1 226 5 is_stmt 1 view .LVU171
+ 226:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->DataItf.InEpSize  = phost->device.CfgDesc.Itf_Desc[interface].Ep_Desc[1].wMaxPacket
+ 581              		.loc 1 226 30 is_stmt 0 view .LVU172
+ 582 0162 EA73     		strb	r2, [r5, #15]
+ 227:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 583              		.loc 1 227 5 is_stmt 1 view .LVU173
+ 227:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 584              		.loc 1 227 89 is_stmt 0 view .LVU174
+ 585 0164 1A23     		movs	r3, #26
+ 586 0166 03FB0040 		mla	r0, r3, r0, r4
+ 587              	.LVL43:
+ 227:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 588              		.loc 1 227 89 view .LVU175
+ 589 016a B0F85833 		ldrh	r3, [r0, #856]
+ 227:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 590              		.loc 1 227 35 view .LVU176
+ 591 016e 6B83     		strh	r3, [r5, #26]	@ movhi
+ 592 0170 B4E7     		b	.L24
+ 593              	.LVL44:
+ 594              	.L25:
+ 164:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 595              		.loc 1 164 12 view .LVU177
+ 596 0172 0227     		movs	r7, #2
+ 597              	.LVL45:
+ 598              	.L19:
+ 257:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 599              		.loc 1 257 1 view .LVU178
+ 600 0174 3846     		mov	r0, r7
+ 601 0176 05B0     		add	sp, sp, #20
+ 602              	.LCFI6:
+ 603              		.cfi_remember_state
+ 604              		.cfi_def_cfa_offset 20
+ 605              		@ sp needed
+ 606 0178 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 607              	.LVL46:
+ 608              	.L26:
+ 609              	.LCFI7:
+ 610              		.cfi_restore_state
+ 171:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 611              		.loc 1 171 12 view .LVU179
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 23
+
+
+ 612 017a 0227     		movs	r7, #2
+ 613 017c FAE7     		b	.L19
+ 614              	.LVL47:
+ 615              	.L27:
+ 180:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 616              		.loc 1 180 12 view .LVU180
+ 617 017e 0227     		movs	r7, #2
+ 618 0180 F8E7     		b	.L19
+ 619              	.LVL48:
+ 620              	.L28:
+ 209:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 621              		.loc 1 209 12 view .LVU181
+ 622 0182 0227     		movs	r7, #2
+ 623 0184 F6E7     		b	.L19
+ 624              		.cfi_endproc
+ 625              	.LFE149:
+ 627              		.section	.text.USBH_CDC_Stop,"ax",%progbits
+ 628              		.align	1
+ 629              		.global	USBH_CDC_Stop
+ 630              		.syntax unified
+ 631              		.thumb
+ 632              		.thumb_func
+ 633              		.fpu fpv5-sp-d16
+ 635              	USBH_CDC_Stop:
+ 636              	.LVL49:
+ 637              	.LFB154:
+ 438:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 638              		.loc 1 438 1 is_stmt 1 view -0
+ 639              		.cfi_startproc
+ 640              		@ args = 0, pretend = 0, frame = 0
+ 641              		@ frame_needed = 0, uses_anonymous_args = 0
+ 438:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 642              		.loc 1 438 1 is_stmt 0 view .LVU183
+ 643 0000 38B5     		push	{r3, r4, r5, lr}
+ 644              	.LCFI8:
+ 645              		.cfi_def_cfa_offset 16
+ 646              		.cfi_offset 3, -16
+ 647              		.cfi_offset 4, -12
+ 648              		.cfi_offset 5, -8
+ 649              		.cfi_offset 14, -4
+ 439:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 650              		.loc 1 439 3 is_stmt 1 view .LVU184
+ 439:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 651              		.loc 1 439 62 is_stmt 0 view .LVU185
+ 652 0002 D0F87C33 		ldr	r3, [r0, #892]
+ 439:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 653              		.loc 1 439 22 view .LVU186
+ 654 0006 DD69     		ldr	r5, [r3, #28]
+ 655              	.LVL50:
+ 441:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 656              		.loc 1 441 3 is_stmt 1 view .LVU187
+ 441:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 657              		.loc 1 441 12 is_stmt 0 view .LVU188
+ 658 0008 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 659 000a DBB2     		uxtb	r3, r3
+ 441:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 660              		.loc 1 441 6 view .LVU189
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 24
+
+
+ 661 000c 0B2B     		cmp	r3, #11
+ 662 000e 01D0     		beq	.L36
+ 663              	.LVL51:
+ 664              	.L34:
+ 449:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 665              		.loc 1 449 3 is_stmt 1 view .LVU190
+ 450:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 666              		.loc 1 450 1 is_stmt 0 view .LVU191
+ 667 0010 0020     		movs	r0, #0
+ 668 0012 38BD     		pop	{r3, r4, r5, pc}
+ 669              	.LVL52:
+ 670              	.L36:
+ 450:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 671              		.loc 1 450 1 view .LVU192
+ 672 0014 0446     		mov	r4, r0
+ 443:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 673              		.loc 1 443 5 is_stmt 1 view .LVU193
+ 443:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 674              		.loc 1 443 23 is_stmt 0 view .LVU194
+ 675 0016 0023     		movs	r3, #0
+ 676 0018 85F84C30 		strb	r3, [r5, #76]
+ 445:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_ClosePipe(phost, CDC_Handle->DataItf.InPipe);
+ 677              		.loc 1 445 5 is_stmt 1 view .LVU195
+ 678 001c 2978     		ldrb	r1, [r5]	@ zero_extendqisi2
+ 679 001e FFF7FEFF 		bl	USBH_ClosePipe
+ 680              	.LVL53:
+ 446:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     USBH_ClosePipe(phost, CDC_Handle->DataItf.OutPipe);
+ 681              		.loc 1 446 5 view .LVU196
+ 682 0022 297B     		ldrb	r1, [r5, #12]	@ zero_extendqisi2
+ 683 0024 2046     		mov	r0, r4
+ 684 0026 FFF7FEFF 		bl	USBH_ClosePipe
+ 685              	.LVL54:
+ 447:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 686              		.loc 1 447 5 view .LVU197
+ 687 002a 697B     		ldrb	r1, [r5, #13]	@ zero_extendqisi2
+ 688 002c 2046     		mov	r0, r4
+ 689 002e FFF7FEFF 		bl	USBH_ClosePipe
+ 690              	.LVL55:
+ 691 0032 EDE7     		b	.L34
+ 692              		.cfi_endproc
+ 693              	.LFE154:
+ 695              		.section	.text.USBH_CDC_SetLineCoding,"ax",%progbits
+ 696              		.align	1
+ 697              		.global	USBH_CDC_SetLineCoding
+ 698              		.syntax unified
+ 699              		.thumb
+ 700              		.thumb_func
+ 701              		.fpu fpv5-sp-d16
+ 703              	USBH_CDC_SetLineCoding:
+ 704              	.LVL56:
+ 705              	.LFB157:
+ 495:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 496:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 497:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @brief  This function prepares the state before issuing the class specific commands
+ 498:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @param  None
+ 499:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @retval None
+ 500:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 25
+
+
+ 501:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** USBH_StatusTypeDef USBH_CDC_SetLineCoding(USBH_HandleTypeDef *phost,
+ 502:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                           CDC_LineCodingTypeDef *linecoding)
+ 503:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 706              		.loc 1 503 1 view -0
+ 707              		.cfi_startproc
+ 708              		@ args = 0, pretend = 0, frame = 0
+ 709              		@ frame_needed = 0, uses_anonymous_args = 0
+ 710              		.loc 1 503 1 is_stmt 0 view .LVU199
+ 711 0000 08B5     		push	{r3, lr}
+ 712              	.LCFI9:
+ 713              		.cfi_def_cfa_offset 8
+ 714              		.cfi_offset 3, -8
+ 715              		.cfi_offset 14, -4
+ 504:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 716              		.loc 1 504 3 is_stmt 1 view .LVU200
+ 717              		.loc 1 504 62 is_stmt 0 view .LVU201
+ 718 0002 D0F87C33 		ldr	r3, [r0, #892]
+ 719              		.loc 1 504 22 view .LVU202
+ 720 0006 DA69     		ldr	r2, [r3, #28]
+ 721              	.LVL57:
+ 505:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 506:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (phost->gState == HOST_CLASS)
+ 722              		.loc 1 506 3 is_stmt 1 view .LVU203
+ 723              		.loc 1 506 12 is_stmt 0 view .LVU204
+ 724 0008 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 725 000a DBB2     		uxtb	r3, r3
+ 726              		.loc 1 506 6 view .LVU205
+ 727 000c 0B2B     		cmp	r3, #11
+ 728 000e 01D0     		beq	.L40
+ 729              	.LVL58:
+ 730              	.L38:
+ 507:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 508:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->state = CDC_SET_LINE_CODING_STATE;
+ 509:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->pUserLineCoding = linecoding;
+ 510:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 511:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (USBH_USE_OS == 1U)
+ 512:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     phost->os_msg = (uint32_t)USBH_CLASS_EVENT;
+ 513:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 514:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     (void)osMessagePut(phost->os_event, phost->os_msg, 0U);
+ 515:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 516:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     (void)osMessageQueuePut(phost->os_event, &phost->os_msg, 0U, NULL);
+ 517:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 518:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 519:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 520:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 521:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return USBH_OK;
+ 731              		.loc 1 521 3 is_stmt 1 view .LVU206
+ 522:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 732              		.loc 1 522 1 is_stmt 0 view .LVU207
+ 733 0010 0020     		movs	r0, #0
+ 734 0012 08BD     		pop	{r3, pc}
+ 735              	.LVL59:
+ 736              	.L40:
+ 508:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->pUserLineCoding = linecoding;
+ 737              		.loc 1 508 5 is_stmt 1 view .LVU208
+ 508:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->pUserLineCoding = linecoding;
+ 738              		.loc 1 508 23 is_stmt 0 view .LVU209
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 26
+
+
+ 739 0014 0123     		movs	r3, #1
+ 740 0016 82F84C30 		strb	r3, [r2, #76]
+ 509:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 741              		.loc 1 509 5 is_stmt 1 view .LVU210
+ 509:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 742              		.loc 1 509 33 is_stmt 0 view .LVU211
+ 743 001a 9164     		str	r1, [r2, #72]
+ 512:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 744              		.loc 1 512 5 is_stmt 1 view .LVU212
+ 512:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 745              		.loc 1 512 19 is_stmt 0 view .LVU213
+ 746 001c 0421     		movs	r1, #4
+ 747              	.LVL60:
+ 512:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 748              		.loc 1 512 19 view .LVU214
+ 749 001e C0F8E013 		str	r1, [r0, #992]
+ 750              	.LVL61:
+ 514:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 751              		.loc 1 514 5 is_stmt 1 view .LVU215
+ 514:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 752              		.loc 1 514 11 is_stmt 0 view .LVU216
+ 753 0022 0022     		movs	r2, #0
+ 754              	.LVL62:
+ 514:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 755              		.loc 1 514 11 view .LVU217
+ 756 0024 D0F8D803 		ldr	r0, [r0, #984]
+ 757              	.LVL63:
+ 514:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 758              		.loc 1 514 11 view .LVU218
+ 759 0028 FFF7FEFF 		bl	osMessagePut
+ 760              	.LVL64:
+ 761 002c F0E7     		b	.L38
+ 762              		.cfi_endproc
+ 763              	.LFE157:
+ 765              		.section	.text.USBH_CDC_GetLineCoding,"ax",%progbits
+ 766              		.align	1
+ 767              		.global	USBH_CDC_GetLineCoding
+ 768              		.syntax unified
+ 769              		.thumb
+ 770              		.thumb_func
+ 771              		.fpu fpv5-sp-d16
+ 773              	USBH_CDC_GetLineCoding:
+ 774              	.LVL65:
+ 775              	.LFB158:
+ 523:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 524:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 525:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @brief  This function prepares the state before issuing the class specific commands
+ 526:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @param  None
+ 527:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @retval None
+ 528:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 529:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** USBH_StatusTypeDef  USBH_CDC_GetLineCoding(USBH_HandleTypeDef *phost,
+ 530:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                                            CDC_LineCodingTypeDef *linecoding)
+ 531:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 776              		.loc 1 531 1 is_stmt 1 view -0
+ 777              		.cfi_startproc
+ 778              		@ args = 0, pretend = 0, frame = 0
+ 779              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 27
+
+
+ 780              		@ link register save eliminated.
+ 781              		.loc 1 531 1 is_stmt 0 view .LVU220
+ 782 0000 0B46     		mov	r3, r1
+ 532:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 783              		.loc 1 532 3 is_stmt 1 view .LVU221
+ 784              		.loc 1 532 62 is_stmt 0 view .LVU222
+ 785 0002 D0F87C23 		ldr	r2, [r0, #892]
+ 786              		.loc 1 532 22 view .LVU223
+ 787 0006 D169     		ldr	r1, [r2, #28]
+ 788              	.LVL66:
+ 533:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 534:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if ((phost->gState == HOST_CLASS) || (phost->gState == HOST_CLASS_REQUEST))
+ 789              		.loc 1 534 3 is_stmt 1 view .LVU224
+ 790              		.loc 1 534 13 is_stmt 0 view .LVU225
+ 791 0008 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
+ 792 000a D2B2     		uxtb	r2, r2
+ 793              		.loc 1 534 6 view .LVU226
+ 794 000c 0B2A     		cmp	r2, #11
+ 795 000e 05D0     		beq	.L42
+ 796              		.loc 1 534 46 discriminator 1 view .LVU227
+ 797 0010 0278     		ldrb	r2, [r0]	@ zero_extendqisi2
+ 798 0012 D2B2     		uxtb	r2, r2
+ 799              		.loc 1 534 37 discriminator 1 view .LVU228
+ 800 0014 062A     		cmp	r2, #6
+ 801 0016 01D0     		beq	.L42
+ 535:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 536:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     *linecoding = CDC_Handle->LineCoding;
+ 537:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     return USBH_OK;
+ 538:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 539:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   else
+ 540:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 541:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     return USBH_FAIL;
+ 802              		.loc 1 541 12 view .LVU229
+ 803 0018 0220     		movs	r0, #2
+ 804              	.LVL67:
+ 542:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 543:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 805              		.loc 1 543 1 view .LVU230
+ 806 001a 7047     		bx	lr
+ 807              	.LVL68:
+ 808              	.L42:
+ 536:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     return USBH_OK;
+ 809              		.loc 1 536 5 is_stmt 1 view .LVU231
+ 536:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     return USBH_OK;
+ 810              		.loc 1 536 17 is_stmt 0 view .LVU232
+ 811 001c 01F14002 		add	r2, r1, #64
+ 812 0020 92E80300 		ldm	r2, {r0, r1}
+ 813              	.LVL69:
+ 536:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     return USBH_OK;
+ 814              		.loc 1 536 17 view .LVU233
+ 815 0024 83E80300 		stm	r3, {r0, r1}
+ 537:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 816              		.loc 1 537 5 is_stmt 1 view .LVU234
+ 537:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 817              		.loc 1 537 12 is_stmt 0 view .LVU235
+ 818 0028 0020     		movs	r0, #0
+ 819 002a 7047     		bx	lr
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 28
+
+
+ 820              		.cfi_endproc
+ 821              	.LFE158:
+ 823              		.section	.text.USBH_CDC_GetLastReceivedDataSize,"ax",%progbits
+ 824              		.align	1
+ 825              		.global	USBH_CDC_GetLastReceivedDataSize
+ 826              		.syntax unified
+ 827              		.thumb
+ 828              		.thumb_func
+ 829              		.fpu fpv5-sp-d16
+ 831              	USBH_CDC_GetLastReceivedDataSize:
+ 832              	.LVL70:
+ 833              	.LFB159:
+ 544:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 545:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 546:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  This function return last received data size
+ 547:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  None
+ 548:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval None
+ 549:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 550:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** uint16_t USBH_CDC_GetLastReceivedDataSize(USBH_HandleTypeDef *phost)
+ 551:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 834              		.loc 1 551 1 is_stmt 1 view -0
+ 835              		.cfi_startproc
+ 836              		@ args = 0, pretend = 0, frame = 0
+ 837              		@ frame_needed = 0, uses_anonymous_args = 0
+ 838              		.loc 1 551 1 is_stmt 0 view .LVU237
+ 839 0000 08B5     		push	{r3, lr}
+ 840              	.LCFI10:
+ 841              		.cfi_def_cfa_offset 8
+ 842              		.cfi_offset 3, -8
+ 843              		.cfi_offset 14, -4
+ 552:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   uint32_t dataSize;
+ 844              		.loc 1 552 3 is_stmt 1 view .LVU238
+ 553:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 845              		.loc 1 553 3 view .LVU239
+ 846              		.loc 1 553 62 is_stmt 0 view .LVU240
+ 847 0002 D0F87C33 		ldr	r3, [r0, #892]
+ 848              		.loc 1 553 22 view .LVU241
+ 849 0006 DA69     		ldr	r2, [r3, #28]
+ 850              	.LVL71:
+ 554:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 555:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if (phost->gState == HOST_CLASS)
+ 851              		.loc 1 555 3 is_stmt 1 view .LVU242
+ 852              		.loc 1 555 12 is_stmt 0 view .LVU243
+ 853 0008 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 854 000a DBB2     		uxtb	r3, r3
+ 855              		.loc 1 555 6 view .LVU244
+ 856 000c 0B2B     		cmp	r3, #11
+ 857 000e 02D0     		beq	.L49
+ 556:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 557:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     dataSize = USBH_LL_GetLastXferSize(phost, CDC_Handle->DataItf.InPipe);
+ 558:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 559:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   else
+ 560:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 561:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     dataSize =  0U;
+ 858              		.loc 1 561 14 view .LVU245
+ 859 0010 0020     		movs	r0, #0
+ 860              	.LVL72:
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 29
+
+
+ 861              	.L46:
+ 562:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 563:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 564:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return (uint16_t)dataSize;
+ 862              		.loc 1 564 3 is_stmt 1 view .LVU246
+ 565:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 863              		.loc 1 565 1 is_stmt 0 view .LVU247
+ 864 0012 80B2     		uxth	r0, r0
+ 865              	.LVL73:
+ 866              		.loc 1 565 1 view .LVU248
+ 867 0014 08BD     		pop	{r3, pc}
+ 868              	.LVL74:
+ 869              	.L49:
+ 557:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 870              		.loc 1 557 5 is_stmt 1 view .LVU249
+ 557:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 871              		.loc 1 557 16 is_stmt 0 view .LVU250
+ 872 0016 117B     		ldrb	r1, [r2, #12]	@ zero_extendqisi2
+ 873 0018 FFF7FEFF 		bl	USBH_LL_GetLastXferSize
+ 874              	.LVL75:
+ 557:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 875              		.loc 1 557 16 view .LVU251
+ 876 001c F9E7     		b	.L46
+ 877              		.cfi_endproc
+ 878              	.LFE159:
+ 880              		.section	.text.USBH_CDC_Transmit,"ax",%progbits
+ 881              		.align	1
+ 882              		.global	USBH_CDC_Transmit
+ 883              		.syntax unified
+ 884              		.thumb
+ 885              		.thumb_func
+ 886              		.fpu fpv5-sp-d16
+ 888              	USBH_CDC_Transmit:
+ 889              	.LVL76:
+ 890              	.LFB160:
+ 566:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 567:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 568:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @brief  This function prepares the state before issuing the class specific commands
+ 569:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @param  None
+ 570:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   * @retval None
+ 571:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   */
+ 572:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** USBH_StatusTypeDef  USBH_CDC_Transmit(USBH_HandleTypeDef *phost, uint8_t *pbuff, uint32_t length)
+ 573:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 891              		.loc 1 573 1 is_stmt 1 view -0
+ 892              		.cfi_startproc
+ 893              		@ args = 0, pretend = 0, frame = 0
+ 894              		@ frame_needed = 0, uses_anonymous_args = 0
+ 895              		.loc 1 573 1 is_stmt 0 view .LVU253
+ 896 0000 08B5     		push	{r3, lr}
+ 897              	.LCFI11:
+ 898              		.cfi_def_cfa_offset 8
+ 899              		.cfi_offset 3, -8
+ 900              		.cfi_offset 14, -4
+ 574:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef Status = USBH_BUSY;
+ 901              		.loc 1 574 3 is_stmt 1 view .LVU254
+ 902              	.LVL77:
+ 575:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 30
+
+
+ 903              		.loc 1 575 3 view .LVU255
+ 904              		.loc 1 575 62 is_stmt 0 view .LVU256
+ 905 0002 D0F87C33 		ldr	r3, [r0, #892]
+ 906              		.loc 1 575 22 view .LVU257
+ 907 0006 DB69     		ldr	r3, [r3, #28]
+ 908              	.LVL78:
+ 576:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 577:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if ((CDC_Handle->state == CDC_IDLE_STATE) || (CDC_Handle->state == CDC_TRANSFER_DATA))
+ 909              		.loc 1 577 3 is_stmt 1 view .LVU258
+ 910              		.loc 1 577 18 is_stmt 0 view .LVU259
+ 911 0008 93F84CC0 		ldrb	ip, [r3, #76]	@ zero_extendqisi2
+ 912              		.loc 1 577 6 view .LVU260
+ 913 000c BCF1030F 		cmp	ip, #3
+ 914 0010 18BF     		it	ne
+ 915 0012 BCF1000F 		cmpne	ip, #0
+ 916 0016 01D0     		beq	.L54
+ 574:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 917              		.loc 1 574 22 view .LVU261
+ 918 0018 0120     		movs	r0, #1
+ 919              	.LVL79:
+ 920              	.L51:
+ 578:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 579:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->pTxData = pbuff;
+ 580:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->TxDataLength = length;
+ 581:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->state = CDC_TRANSFER_DATA;
+ 582:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->data_tx_state = CDC_SEND_DATA;
+ 583:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     Status = USBH_OK;
+ 584:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 585:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (USBH_USE_OS == 1U)
+ 586:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     phost->os_msg = (uint32_t)USBH_CLASS_EVENT;
+ 587:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 588:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     (void)osMessagePut(phost->os_event, phost->os_msg, 0U);
+ 589:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 590:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     (void)osMessageQueuePut(phost->os_event, &phost->os_msg, 0U, NULL);
+ 591:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 592:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 593:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 594:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return Status;
+ 921              		.loc 1 594 3 is_stmt 1 view .LVU262
+ 595:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 922              		.loc 1 595 1 is_stmt 0 view .LVU263
+ 923 001a 08BD     		pop	{r3, pc}
+ 924              	.LVL80:
+ 925              	.L54:
+ 579:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->TxDataLength = length;
+ 926              		.loc 1 579 5 is_stmt 1 view .LVU264
+ 579:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->TxDataLength = length;
+ 927              		.loc 1 579 25 is_stmt 0 view .LVU265
+ 928 001c D961     		str	r1, [r3, #28]
+ 580:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->state = CDC_TRANSFER_DATA;
+ 929              		.loc 1 580 5 is_stmt 1 view .LVU266
+ 580:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->state = CDC_TRANSFER_DATA;
+ 930              		.loc 1 580 30 is_stmt 0 view .LVU267
+ 931 001e 5A62     		str	r2, [r3, #36]
+ 581:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->data_tx_state = CDC_SEND_DATA;
+ 932              		.loc 1 581 5 is_stmt 1 view .LVU268
+ 581:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->data_tx_state = CDC_SEND_DATA;
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 31
+
+
+ 933              		.loc 1 581 23 is_stmt 0 view .LVU269
+ 934 0020 0322     		movs	r2, #3
+ 935              	.LVL81:
+ 581:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->data_tx_state = CDC_SEND_DATA;
+ 936              		.loc 1 581 23 view .LVU270
+ 937 0022 83F84C20 		strb	r2, [r3, #76]
+ 582:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     Status = USBH_OK;
+ 938              		.loc 1 582 5 is_stmt 1 view .LVU271
+ 582:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     Status = USBH_OK;
+ 939              		.loc 1 582 31 is_stmt 0 view .LVU272
+ 940 0026 0122     		movs	r2, #1
+ 941 0028 83F84D20 		strb	r2, [r3, #77]
+ 583:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 942              		.loc 1 583 5 is_stmt 1 view .LVU273
+ 943              	.LVL82:
+ 586:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 944              		.loc 1 586 5 view .LVU274
+ 586:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 945              		.loc 1 586 19 is_stmt 0 view .LVU275
+ 946 002c 0421     		movs	r1, #4
+ 947              	.LVL83:
+ 586:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 948              		.loc 1 586 19 view .LVU276
+ 949 002e C0F8E013 		str	r1, [r0, #992]
+ 950              	.LVL84:
+ 588:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 951              		.loc 1 588 5 is_stmt 1 view .LVU277
+ 588:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 952              		.loc 1 588 11 is_stmt 0 view .LVU278
+ 953 0032 0022     		movs	r2, #0
+ 954 0034 D0F8D803 		ldr	r0, [r0, #984]
+ 955              	.LVL85:
+ 588:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 956              		.loc 1 588 11 view .LVU279
+ 957 0038 FFF7FEFF 		bl	osMessagePut
+ 958              	.LVL86:
+ 583:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 959              		.loc 1 583 12 view .LVU280
+ 960 003c 0020     		movs	r0, #0
+ 961 003e ECE7     		b	.L51
+ 962              		.cfi_endproc
+ 963              	.LFE160:
+ 965              		.section	.text.USBH_CDC_Receive,"ax",%progbits
+ 966              		.align	1
+ 967              		.global	USBH_CDC_Receive
+ 968              		.syntax unified
+ 969              		.thumb
+ 970              		.thumb_func
+ 971              		.fpu fpv5-sp-d16
+ 973              	USBH_CDC_Receive:
+ 974              	.LVL87:
+ 975              	.LFB161:
+ 596:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 597:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 598:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 599:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @brief  This function prepares the state before issuing the class specific commands
+ 600:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @param  None
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 32
+
+
+ 601:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @retval None
+ 602:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 603:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** USBH_StatusTypeDef  USBH_CDC_Receive(USBH_HandleTypeDef *phost, uint8_t *pbuff, uint32_t length)
+ 604:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 976              		.loc 1 604 1 is_stmt 1 view -0
+ 977              		.cfi_startproc
+ 978              		@ args = 0, pretend = 0, frame = 0
+ 979              		@ frame_needed = 0, uses_anonymous_args = 0
+ 980              		.loc 1 604 1 is_stmt 0 view .LVU282
+ 981 0000 08B5     		push	{r3, lr}
+ 982              	.LCFI12:
+ 983              		.cfi_def_cfa_offset 8
+ 984              		.cfi_offset 3, -8
+ 985              		.cfi_offset 14, -4
+ 605:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef Status = USBH_BUSY;
+ 986              		.loc 1 605 3 is_stmt 1 view .LVU283
+ 987              	.LVL88:
+ 606:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 988              		.loc 1 606 3 view .LVU284
+ 989              		.loc 1 606 62 is_stmt 0 view .LVU285
+ 990 0002 D0F87C33 		ldr	r3, [r0, #892]
+ 991              		.loc 1 606 22 view .LVU286
+ 992 0006 DB69     		ldr	r3, [r3, #28]
+ 993              	.LVL89:
+ 607:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 608:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   if ((CDC_Handle->state == CDC_IDLE_STATE) || (CDC_Handle->state == CDC_TRANSFER_DATA))
+ 994              		.loc 1 608 3 is_stmt 1 view .LVU287
+ 995              		.loc 1 608 18 is_stmt 0 view .LVU288
+ 996 0008 93F84CC0 		ldrb	ip, [r3, #76]	@ zero_extendqisi2
+ 997              		.loc 1 608 6 view .LVU289
+ 998 000c BCF1030F 		cmp	ip, #3
+ 999 0010 18BF     		it	ne
+ 1000 0012 BCF1000F 		cmpne	ip, #0
+ 1001 0016 01D0     		beq	.L59
+ 605:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 1002              		.loc 1 605 22 view .LVU290
+ 1003 0018 0120     		movs	r0, #1
+ 1004              	.LVL90:
+ 1005              	.L56:
+ 609:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 610:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->pRxData = pbuff;
+ 611:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->RxDataLength = length;
+ 612:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->state = CDC_TRANSFER_DATA;
+ 613:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->data_rx_state = CDC_RECEIVE_DATA;
+ 614:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     Status = USBH_OK;
+ 615:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 616:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (USBH_USE_OS == 1U)
+ 617:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     phost->os_msg = (uint32_t)USBH_CLASS_EVENT;
+ 618:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 619:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     (void)osMessagePut(phost->os_event, phost->os_msg, 0U);
+ 620:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 621:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     (void)osMessageQueuePut(phost->os_event, &phost->os_msg, 0U, NULL);
+ 622:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 623:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 624:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 625:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   return Status;
+ 1006              		.loc 1 625 3 is_stmt 1 view .LVU291
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 33
+
+
+ 626:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 1007              		.loc 1 626 1 is_stmt 0 view .LVU292
+ 1008 001a 08BD     		pop	{r3, pc}
+ 1009              	.LVL91:
+ 1010              	.L59:
+ 610:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->RxDataLength = length;
+ 1011              		.loc 1 610 5 is_stmt 1 view .LVU293
+ 610:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->RxDataLength = length;
+ 1012              		.loc 1 610 25 is_stmt 0 view .LVU294
+ 1013 001c 1962     		str	r1, [r3, #32]
+ 611:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->state = CDC_TRANSFER_DATA;
+ 1014              		.loc 1 611 5 is_stmt 1 view .LVU295
+ 611:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->state = CDC_TRANSFER_DATA;
+ 1015              		.loc 1 611 30 is_stmt 0 view .LVU296
+ 1016 001e 9A62     		str	r2, [r3, #40]
+ 612:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->data_rx_state = CDC_RECEIVE_DATA;
+ 1017              		.loc 1 612 5 is_stmt 1 view .LVU297
+ 612:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->data_rx_state = CDC_RECEIVE_DATA;
+ 1018              		.loc 1 612 23 is_stmt 0 view .LVU298
+ 1019 0020 0322     		movs	r2, #3
+ 1020              	.LVL92:
+ 612:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     CDC_Handle->data_rx_state = CDC_RECEIVE_DATA;
+ 1021              		.loc 1 612 23 view .LVU299
+ 1022 0022 83F84C20 		strb	r2, [r3, #76]
+ 613:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     Status = USBH_OK;
+ 1023              		.loc 1 613 5 is_stmt 1 view .LVU300
+ 613:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     Status = USBH_OK;
+ 1024              		.loc 1 613 31 is_stmt 0 view .LVU301
+ 1025 0026 83F84E20 		strb	r2, [r3, #78]
+ 614:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1026              		.loc 1 614 5 is_stmt 1 view .LVU302
+ 1027              	.LVL93:
+ 617:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 1028              		.loc 1 617 5 view .LVU303
+ 617:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 1029              		.loc 1 617 19 is_stmt 0 view .LVU304
+ 1030 002a 0421     		movs	r1, #4
+ 1031              	.LVL94:
+ 617:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 1032              		.loc 1 617 19 view .LVU305
+ 1033 002c C0F8E013 		str	r1, [r0, #992]
+ 1034              	.LVL95:
+ 619:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1035              		.loc 1 619 5 is_stmt 1 view .LVU306
+ 619:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1036              		.loc 1 619 11 is_stmt 0 view .LVU307
+ 1037 0030 0022     		movs	r2, #0
+ 1038 0032 D0F8D803 		ldr	r0, [r0, #984]
+ 1039              	.LVL96:
+ 619:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1040              		.loc 1 619 11 view .LVU308
+ 1041 0036 FFF7FEFF 		bl	osMessagePut
+ 1042              	.LVL97:
+ 614:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1043              		.loc 1 614 12 view .LVU309
+ 1044 003a 0020     		movs	r0, #0
+ 1045 003c EDE7     		b	.L56
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 34
+
+
+ 1046              		.cfi_endproc
+ 1047              	.LFE161:
+ 1049              		.section	.text.USBH_CDC_TransmitCallback,"ax",%progbits
+ 1050              		.align	1
+ 1051              		.weak	USBH_CDC_TransmitCallback
+ 1052              		.syntax unified
+ 1053              		.thumb
+ 1054              		.thumb_func
+ 1055              		.fpu fpv5-sp-d16
+ 1057              	USBH_CDC_TransmitCallback:
+ 1058              	.LVL98:
+ 1059              	.LFB164:
+ 627:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 628:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 629:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @brief  The function is responsible for sending data to the device
+ 630:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** *  @param  pdev: Selected device
+ 631:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @retval None
+ 632:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 633:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static void CDC_ProcessTransmission(USBH_HandleTypeDef *phost)
+ 634:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 635:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 636:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_URBStateTypeDef URB_Status = USBH_URB_IDLE;
+ 637:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 638:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   switch (CDC_Handle->data_tx_state)
+ 639:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 640:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     case CDC_SEND_DATA:
+ 641:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       if (CDC_Handle->TxDataLength > CDC_Handle->DataItf.OutEpSize)
+ 642:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 643:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         USBH_BulkSendData(phost,
+ 644:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           CDC_Handle->pTxData,
+ 645:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           CDC_Handle->DataItf.OutEpSize,
+ 646:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           CDC_Handle->DataItf.OutPipe,
+ 647:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           1U);
+ 648:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 649:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       else
+ 650:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 651:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         USBH_BulkSendData(phost,
+ 652:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           CDC_Handle->pTxData,
+ 653:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           (uint16_t)CDC_Handle->TxDataLength,
+ 654:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           CDC_Handle->DataItf.OutPipe,
+ 655:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           1U);
+ 656:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 657:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 658:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       CDC_Handle->data_tx_state = CDC_SEND_DATA_WAIT;
+ 659:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 660:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 661:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     case CDC_SEND_DATA_WAIT:
+ 662:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 663:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       URB_Status = USBH_LL_GetURBState(phost, CDC_Handle->DataItf.OutPipe);
+ 664:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 665:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       /* Check the status done for transmission */
+ 666:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       if (URB_Status == USBH_URB_DONE)
+ 667:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 668:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         if (CDC_Handle->TxDataLength > CDC_Handle->DataItf.OutEpSize)
+ 669:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 670:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->TxDataLength -= CDC_Handle->DataItf.OutEpSize;
+ 671:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->pTxData += CDC_Handle->DataItf.OutEpSize;
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 35
+
+
+ 672:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 673:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         else
+ 674:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 675:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->TxDataLength = 0U;
+ 676:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 677:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 678:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         if (CDC_Handle->TxDataLength > 0U)
+ 679:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 680:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->data_tx_state = CDC_SEND_DATA;
+ 681:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 682:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         else
+ 683:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 684:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->data_tx_state = CDC_IDLE;
+ 685:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           USBH_CDC_TransmitCallback(phost);
+ 686:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 687:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 688:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (USBH_USE_OS == 1U)
+ 689:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         phost->os_msg = (uint32_t)USBH_CLASS_EVENT;
+ 690:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 691:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         (void)osMessagePut(phost->os_event, phost->os_msg, 0U);
+ 692:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 693:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         (void)osMessageQueuePut(phost->os_event, &phost->os_msg, 0U, NULL);
+ 694:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 695:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 696:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 697:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       else
+ 698:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 699:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         if (URB_Status == USBH_URB_NOTREADY)
+ 700:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 701:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->data_tx_state = CDC_SEND_DATA;
+ 702:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 703:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (USBH_USE_OS == 1U)
+ 704:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           phost->os_msg = (uint32_t)USBH_CLASS_EVENT;
+ 705:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 706:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           (void)osMessagePut(phost->os_event, phost->os_msg, 0U);
+ 707:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 708:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           (void)osMessageQueuePut(phost->os_event, &phost->os_msg, 0U, NULL);
+ 709:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 710:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 711:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 712:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 713:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 714:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 715:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     default:
+ 716:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 717:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 718:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 719:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 720:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @brief  This function responsible for reception of data from the device
+ 721:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** *  @param  pdev: Selected device
+ 722:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @retval None
+ 723:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 724:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 725:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** static void CDC_ProcessReception(USBH_HandleTypeDef *phost)
+ 726:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 727:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 728:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_URBStateTypeDef URB_Status = USBH_URB_IDLE;
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 36
+
+
+ 729:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   uint32_t length;
+ 730:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 731:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   switch (CDC_Handle->data_rx_state)
+ 732:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 733:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 734:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     case CDC_RECEIVE_DATA:
+ 735:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 736:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       USBH_BulkReceiveData(phost,
+ 737:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                            CDC_Handle->pRxData,
+ 738:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                            CDC_Handle->DataItf.InEpSize,
+ 739:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                            CDC_Handle->DataItf.InPipe);
+ 740:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 741:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       CDC_Handle->data_rx_state = CDC_RECEIVE_DATA_WAIT;
+ 742:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 743:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 744:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 745:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     case CDC_RECEIVE_DATA_WAIT:
+ 746:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 747:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       URB_Status = USBH_LL_GetURBState(phost, CDC_Handle->DataItf.InPipe);
+ 748:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 749:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       /*Check the status done for reception*/
+ 750:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       if (URB_Status == USBH_URB_DONE)
+ 751:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 752:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         length = USBH_LL_GetLastXferSize(phost, CDC_Handle->DataItf.InPipe);
+ 753:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 754:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         if (((CDC_Handle->RxDataLength - length) > 0U) && (length > CDC_Handle->DataItf.InEpSize))
+ 755:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 756:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->RxDataLength -= length ;
+ 757:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->pRxData += length;
+ 758:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->data_rx_state = CDC_RECEIVE_DATA;
+ 759:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 760:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         else
+ 761:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 762:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->data_rx_state = CDC_IDLE;
+ 763:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           USBH_CDC_ReceiveCallback(phost);
+ 764:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 765:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 766:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (USBH_USE_OS == 1U)
+ 767:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         phost->os_msg = (uint32_t)USBH_CLASS_EVENT;
+ 768:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 769:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         (void)osMessagePut(phost->os_event, phost->os_msg, 0U);
+ 770:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 771:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         (void)osMessageQueuePut(phost->os_event, &phost->os_msg, 0U, NULL);
+ 772:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 773:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #endif
+ 774:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 775:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 776:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 777:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****     default:
+ 778:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 779:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   }
+ 780:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 781:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 782:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 783:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @brief  The function informs user that data have been received
+ 784:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** *  @param  pdev: Selected device
+ 785:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @retval None
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 37
+
+
+ 786:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 787:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** __weak void USBH_CDC_TransmitCallback(USBH_HandleTypeDef *phost)
+ 788:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 1060              		.loc 1 788 1 is_stmt 1 view -0
+ 1061              		.cfi_startproc
+ 1062              		@ args = 0, pretend = 0, frame = 0
+ 1063              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1064              		@ link register save eliminated.
+ 789:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /* Prevent unused argument(s) compilation warning */
+ 790:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   UNUSED(phost);
+ 1065              		.loc 1 790 3 view .LVU311
+ 791:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 1066              		.loc 1 791 1 is_stmt 0 view .LVU312
+ 1067 0000 7047     		bx	lr
+ 1068              		.cfi_endproc
+ 1069              	.LFE164:
+ 1071              		.section	.text.CDC_ProcessTransmission,"ax",%progbits
+ 1072              		.align	1
+ 1073              		.syntax unified
+ 1074              		.thumb
+ 1075              		.thumb_func
+ 1076              		.fpu fpv5-sp-d16
+ 1078              	CDC_ProcessTransmission:
+ 1079              	.LVL99:
+ 1080              	.LFB162:
+ 634:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 1081              		.loc 1 634 1 is_stmt 1 view -0
+ 1082              		.cfi_startproc
+ 1083              		@ args = 0, pretend = 0, frame = 0
+ 1084              		@ frame_needed = 0, uses_anonymous_args = 0
+ 634:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 1085              		.loc 1 634 1 is_stmt 0 view .LVU314
+ 1086 0000 30B5     		push	{r4, r5, lr}
+ 1087              	.LCFI13:
+ 1088              		.cfi_def_cfa_offset 12
+ 1089              		.cfi_offset 4, -12
+ 1090              		.cfi_offset 5, -8
+ 1091              		.cfi_offset 14, -4
+ 1092 0002 83B0     		sub	sp, sp, #12
+ 1093              	.LCFI14:
+ 1094              		.cfi_def_cfa_offset 24
+ 1095 0004 0446     		mov	r4, r0
+ 635:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_URBStateTypeDef URB_Status = USBH_URB_IDLE;
+ 1096              		.loc 1 635 3 is_stmt 1 view .LVU315
+ 635:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_URBStateTypeDef URB_Status = USBH_URB_IDLE;
+ 1097              		.loc 1 635 62 is_stmt 0 view .LVU316
+ 1098 0006 D0F87C33 		ldr	r3, [r0, #892]
+ 635:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_URBStateTypeDef URB_Status = USBH_URB_IDLE;
+ 1099              		.loc 1 635 22 view .LVU317
+ 1100 000a DD69     		ldr	r5, [r3, #28]
+ 1101              	.LVL100:
+ 636:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1102              		.loc 1 636 3 is_stmt 1 view .LVU318
+ 638:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 1103              		.loc 1 638 3 view .LVU319
+ 638:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 1104              		.loc 1 638 21 is_stmt 0 view .LVU320
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 38
+
+
+ 1105 000c 95F84D30 		ldrb	r3, [r5, #77]	@ zero_extendqisi2
+ 638:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 1106              		.loc 1 638 3 view .LVU321
+ 1107 0010 012B     		cmp	r3, #1
+ 1108 0012 03D0     		beq	.L62
+ 1109 0014 022B     		cmp	r3, #2
+ 1110 0016 19D0     		beq	.L63
+ 1111              	.LVL101:
+ 1112              	.L61:
+ 718:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 1113              		.loc 1 718 1 view .LVU322
+ 1114 0018 03B0     		add	sp, sp, #12
+ 1115              	.LCFI15:
+ 1116              		.cfi_remember_state
+ 1117              		.cfi_def_cfa_offset 12
+ 1118              		@ sp needed
+ 1119 001a 30BD     		pop	{r4, r5, pc}
+ 1120              	.LVL102:
+ 1121              	.L62:
+ 1122              	.LCFI16:
+ 1123              		.cfi_restore_state
+ 641:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1124              		.loc 1 641 7 is_stmt 1 view .LVU323
+ 641:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1125              		.loc 1 641 21 is_stmt 0 view .LVU324
+ 1126 001c 686A     		ldr	r0, [r5, #36]
+ 1127              	.LVL103:
+ 641:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1128              		.loc 1 641 57 view .LVU325
+ 1129 001e 2A8B     		ldrh	r2, [r5, #24]
+ 641:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1130              		.loc 1 641 10 view .LVU326
+ 1131 0020 9042     		cmp	r0, r2
+ 1132 0022 0AD9     		bls	.L65
+ 643:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           CDC_Handle->pTxData,
+ 1133              		.loc 1 643 9 is_stmt 1 view .LVU327
+ 1134 0024 6B7B     		ldrb	r3, [r5, #13]	@ zero_extendqisi2
+ 1135 0026 E969     		ldr	r1, [r5, #28]
+ 1136 0028 0120     		movs	r0, #1
+ 1137 002a 0090     		str	r0, [sp]
+ 1138 002c 2046     		mov	r0, r4
+ 1139 002e FFF7FEFF 		bl	USBH_BulkSendData
+ 1140              	.LVL104:
+ 1141              	.L66:
+ 658:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 1142              		.loc 1 658 7 view .LVU328
+ 658:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 1143              		.loc 1 658 33 is_stmt 0 view .LVU329
+ 1144 0032 0223     		movs	r3, #2
+ 1145 0034 85F84D30 		strb	r3, [r5, #77]
+ 659:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1146              		.loc 1 659 7 is_stmt 1 view .LVU330
+ 1147 0038 EEE7     		b	.L61
+ 1148              	.L65:
+ 651:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                           CDC_Handle->pTxData,
+ 1149              		.loc 1 651 9 view .LVU331
+ 1150 003a 6B7B     		ldrb	r3, [r5, #13]	@ zero_extendqisi2
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 39
+
+
+ 1151 003c E969     		ldr	r1, [r5, #28]
+ 1152 003e 0122     		movs	r2, #1
+ 1153 0040 0092     		str	r2, [sp]
+ 1154 0042 82B2     		uxth	r2, r0
+ 1155 0044 2046     		mov	r0, r4
+ 1156 0046 FFF7FEFF 		bl	USBH_BulkSendData
+ 1157              	.LVL105:
+ 1158 004a F2E7     		b	.L66
+ 1159              	.LVL106:
+ 1160              	.L63:
+ 663:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1161              		.loc 1 663 7 view .LVU332
+ 663:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1162              		.loc 1 663 20 is_stmt 0 view .LVU333
+ 1163 004c 697B     		ldrb	r1, [r5, #13]	@ zero_extendqisi2
+ 1164 004e FFF7FEFF 		bl	USBH_LL_GetURBState
+ 1165              	.LVL107:
+ 666:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1166              		.loc 1 666 7 is_stmt 1 view .LVU334
+ 666:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1167              		.loc 1 666 10 is_stmt 0 view .LVU335
+ 1168 0052 0128     		cmp	r0, #1
+ 1169 0054 0DD0     		beq	.L73
+ 699:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1170              		.loc 1 699 9 is_stmt 1 view .LVU336
+ 699:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1171              		.loc 1 699 12 is_stmt 0 view .LVU337
+ 1172 0056 0228     		cmp	r0, #2
+ 1173 0058 DED1     		bne	.L61
+ 701:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1174              		.loc 1 701 11 is_stmt 1 view .LVU338
+ 701:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1175              		.loc 1 701 37 is_stmt 0 view .LVU339
+ 1176 005a 0123     		movs	r3, #1
+ 1177 005c 85F84D30 		strb	r3, [r5, #77]
+ 704:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 1178              		.loc 1 704 11 is_stmt 1 view .LVU340
+ 704:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 1179              		.loc 1 704 25 is_stmt 0 view .LVU341
+ 1180 0060 0421     		movs	r1, #4
+ 1181 0062 C4F8E013 		str	r1, [r4, #992]
+ 706:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1182              		.loc 1 706 11 is_stmt 1 view .LVU342
+ 706:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1183              		.loc 1 706 17 is_stmt 0 view .LVU343
+ 1184 0066 0022     		movs	r2, #0
+ 1185 0068 D4F8D803 		ldr	r0, [r4, #984]
+ 1186              	.LVL108:
+ 706:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1187              		.loc 1 706 17 view .LVU344
+ 1188 006c FFF7FEFF 		bl	osMessagePut
+ 1189              	.LVL109:
+ 718:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 1190              		.loc 1 718 1 view .LVU345
+ 1191 0070 D2E7     		b	.L61
+ 1192              	.LVL110:
+ 1193              	.L73:
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 40
+
+
+ 668:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1194              		.loc 1 668 9 is_stmt 1 view .LVU346
+ 668:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1195              		.loc 1 668 23 is_stmt 0 view .LVU347
+ 1196 0072 6B6A     		ldr	r3, [r5, #36]
+ 668:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1197              		.loc 1 668 59 view .LVU348
+ 1198 0074 2A8B     		ldrh	r2, [r5, #24]
+ 668:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1199              		.loc 1 668 12 view .LVU349
+ 1200 0076 9342     		cmp	r3, r2
+ 1201 0078 12D9     		bls	.L68
+ 670:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->pTxData += CDC_Handle->DataItf.OutEpSize;
+ 1202              		.loc 1 670 11 is_stmt 1 view .LVU350
+ 670:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->pTxData += CDC_Handle->DataItf.OutEpSize;
+ 1203              		.loc 1 670 36 is_stmt 0 view .LVU351
+ 1204 007a 9B1A     		subs	r3, r3, r2
+ 1205 007c 6B62     		str	r3, [r5, #36]
+ 671:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1206              		.loc 1 671 11 is_stmt 1 view .LVU352
+ 671:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1207              		.loc 1 671 31 is_stmt 0 view .LVU353
+ 1208 007e EB69     		ldr	r3, [r5, #28]
+ 1209 0080 1344     		add	r3, r3, r2
+ 1210 0082 EB61     		str	r3, [r5, #28]
+ 1211              	.L69:
+ 678:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1212              		.loc 1 678 9 is_stmt 1 view .LVU354
+ 678:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1213              		.loc 1 678 23 is_stmt 0 view .LVU355
+ 1214 0084 6B6A     		ldr	r3, [r5, #36]
+ 678:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1215              		.loc 1 678 12 view .LVU356
+ 1216 0086 73B1     		cbz	r3, .L70
+ 680:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1217              		.loc 1 680 11 is_stmt 1 view .LVU357
+ 680:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1218              		.loc 1 680 37 is_stmt 0 view .LVU358
+ 1219 0088 0123     		movs	r3, #1
+ 1220 008a 85F84D30 		strb	r3, [r5, #77]
+ 1221              	.LVL111:
+ 1222              	.L71:
+ 689:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 1223              		.loc 1 689 9 is_stmt 1 view .LVU359
+ 689:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 1224              		.loc 1 689 23 is_stmt 0 view .LVU360
+ 1225 008e 0421     		movs	r1, #4
+ 1226 0090 C4F8E013 		str	r1, [r4, #992]
+ 691:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1227              		.loc 1 691 9 is_stmt 1 view .LVU361
+ 691:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1228              		.loc 1 691 15 is_stmt 0 view .LVU362
+ 1229 0094 0022     		movs	r2, #0
+ 1230 0096 D4F8D803 		ldr	r0, [r4, #984]
+ 1231 009a FFF7FEFF 		bl	osMessagePut
+ 1232              	.LVL112:
+ 1233 009e BBE7     		b	.L61
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 41
+
+
+ 1234              	.LVL113:
+ 1235              	.L68:
+ 675:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1236              		.loc 1 675 11 is_stmt 1 view .LVU363
+ 675:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1237              		.loc 1 675 36 is_stmt 0 view .LVU364
+ 1238 00a0 0023     		movs	r3, #0
+ 1239 00a2 6B62     		str	r3, [r5, #36]
+ 1240 00a4 EEE7     		b	.L69
+ 1241              	.L70:
+ 684:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           USBH_CDC_TransmitCallback(phost);
+ 1242              		.loc 1 684 11 is_stmt 1 view .LVU365
+ 684:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           USBH_CDC_TransmitCallback(phost);
+ 1243              		.loc 1 684 37 is_stmt 0 view .LVU366
+ 1244 00a6 0023     		movs	r3, #0
+ 1245 00a8 85F84D30 		strb	r3, [r5, #77]
+ 685:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1246              		.loc 1 685 11 is_stmt 1 view .LVU367
+ 1247 00ac 2046     		mov	r0, r4
+ 1248              	.LVL114:
+ 685:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1249              		.loc 1 685 11 is_stmt 0 view .LVU368
+ 1250 00ae FFF7FEFF 		bl	USBH_CDC_TransmitCallback
+ 1251              	.LVL115:
+ 1252 00b2 ECE7     		b	.L71
+ 1253              		.cfi_endproc
+ 1254              	.LFE162:
+ 1256              		.section	.text.USBH_CDC_ReceiveCallback,"ax",%progbits
+ 1257              		.align	1
+ 1258              		.weak	USBH_CDC_ReceiveCallback
+ 1259              		.syntax unified
+ 1260              		.thumb
+ 1261              		.thumb_func
+ 1262              		.fpu fpv5-sp-d16
+ 1264              	USBH_CDC_ReceiveCallback:
+ 1265              	.LVL116:
+ 1266              	.LFB165:
+ 792:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 793:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 794:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @brief  The function informs user that data have been sent
+ 795:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** *  @param  pdev: Selected device
+ 796:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @retval None
+ 797:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 798:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** __weak void USBH_CDC_ReceiveCallback(USBH_HandleTypeDef *phost)
+ 799:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 1267              		.loc 1 799 1 is_stmt 1 view -0
+ 1268              		.cfi_startproc
+ 1269              		@ args = 0, pretend = 0, frame = 0
+ 1270              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1271              		@ link register save eliminated.
+ 800:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /* Prevent unused argument(s) compilation warning */
+ 801:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   UNUSED(phost);
+ 1272              		.loc 1 801 3 view .LVU370
+ 802:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 1273              		.loc 1 802 1 is_stmt 0 view .LVU371
+ 1274 0000 7047     		bx	lr
+ 1275              		.cfi_endproc
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 42
+
+
+ 1276              	.LFE165:
+ 1278              		.section	.text.CDC_ProcessReception,"ax",%progbits
+ 1279              		.align	1
+ 1280              		.syntax unified
+ 1281              		.thumb
+ 1282              		.thumb_func
+ 1283              		.fpu fpv5-sp-d16
+ 1285              	CDC_ProcessReception:
+ 1286              	.LVL117:
+ 1287              	.LFB163:
+ 726:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 1288              		.loc 1 726 1 is_stmt 1 view -0
+ 1289              		.cfi_startproc
+ 1290              		@ args = 0, pretend = 0, frame = 0
+ 1291              		@ frame_needed = 0, uses_anonymous_args = 0
+ 726:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 1292              		.loc 1 726 1 is_stmt 0 view .LVU373
+ 1293 0000 38B5     		push	{r3, r4, r5, lr}
+ 1294              	.LCFI17:
+ 1295              		.cfi_def_cfa_offset 16
+ 1296              		.cfi_offset 3, -16
+ 1297              		.cfi_offset 4, -12
+ 1298              		.cfi_offset 5, -8
+ 1299              		.cfi_offset 14, -4
+ 1300 0002 0446     		mov	r4, r0
+ 727:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_URBStateTypeDef URB_Status = USBH_URB_IDLE;
+ 1301              		.loc 1 727 3 is_stmt 1 view .LVU374
+ 727:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_URBStateTypeDef URB_Status = USBH_URB_IDLE;
+ 1302              		.loc 1 727 62 is_stmt 0 view .LVU375
+ 1303 0004 D0F87C33 		ldr	r3, [r0, #892]
+ 727:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_URBStateTypeDef URB_Status = USBH_URB_IDLE;
+ 1304              		.loc 1 727 22 view .LVU376
+ 1305 0008 DD69     		ldr	r5, [r3, #28]
+ 1306              	.LVL118:
+ 728:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   uint32_t length;
+ 1307              		.loc 1 728 3 is_stmt 1 view .LVU377
+ 729:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1308              		.loc 1 729 3 view .LVU378
+ 731:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 1309              		.loc 1 731 3 view .LVU379
+ 731:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 1310              		.loc 1 731 21 is_stmt 0 view .LVU380
+ 1311 000a 95F84E30 		ldrb	r3, [r5, #78]	@ zero_extendqisi2
+ 731:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 1312              		.loc 1 731 3 view .LVU381
+ 1313 000e 032B     		cmp	r3, #3
+ 1314 0010 02D0     		beq	.L76
+ 1315 0012 042B     		cmp	r3, #4
+ 1316 0014 09D0     		beq	.L77
+ 1317              	.LVL119:
+ 1318              	.L75:
+ 780:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1319              		.loc 1 780 1 view .LVU382
+ 1320 0016 38BD     		pop	{r3, r4, r5, pc}
+ 1321              	.LVL120:
+ 1322              	.L76:
+ 736:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****                            CDC_Handle->pRxData,
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 43
+
+
+ 1323              		.loc 1 736 7 is_stmt 1 view .LVU383
+ 1324 0018 2B7B     		ldrb	r3, [r5, #12]	@ zero_extendqisi2
+ 1325 001a 6A8B     		ldrh	r2, [r5, #26]
+ 1326 001c 296A     		ldr	r1, [r5, #32]
+ 1327 001e FFF7FEFF 		bl	USBH_BulkReceiveData
+ 1328              	.LVL121:
+ 741:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1329              		.loc 1 741 7 view .LVU384
+ 741:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1330              		.loc 1 741 33 is_stmt 0 view .LVU385
+ 1331 0022 0423     		movs	r3, #4
+ 1332 0024 85F84E30 		strb	r3, [r5, #78]
+ 743:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1333              		.loc 1 743 7 is_stmt 1 view .LVU386
+ 1334 0028 F5E7     		b	.L75
+ 1335              	.LVL122:
+ 1336              	.L77:
+ 747:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1337              		.loc 1 747 7 view .LVU387
+ 747:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1338              		.loc 1 747 20 is_stmt 0 view .LVU388
+ 1339 002a 297B     		ldrb	r1, [r5, #12]	@ zero_extendqisi2
+ 1340 002c FFF7FEFF 		bl	USBH_LL_GetURBState
+ 1341              	.LVL123:
+ 750:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1342              		.loc 1 750 7 is_stmt 1 view .LVU389
+ 750:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1343              		.loc 1 750 10 is_stmt 0 view .LVU390
+ 1344 0030 0128     		cmp	r0, #1
+ 1345 0032 F0D1     		bne	.L75
+ 752:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1346              		.loc 1 752 9 is_stmt 1 view .LVU391
+ 752:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1347              		.loc 1 752 18 is_stmt 0 view .LVU392
+ 1348 0034 297B     		ldrb	r1, [r5, #12]	@ zero_extendqisi2
+ 1349 0036 2046     		mov	r0, r4
+ 1350              	.LVL124:
+ 752:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1351              		.loc 1 752 18 view .LVU393
+ 1352 0038 FFF7FEFF 		bl	USBH_LL_GetLastXferSize
+ 1353              	.LVL125:
+ 754:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1354              		.loc 1 754 9 is_stmt 1 view .LVU394
+ 754:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1355              		.loc 1 754 25 is_stmt 0 view .LVU395
+ 1356 003c AB6A     		ldr	r3, [r5, #40]
+ 754:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1357              		.loc 1 754 12 view .LVU396
+ 1358 003e 8342     		cmp	r3, r0
+ 1359 0040 0BD0     		beq	.L79
+ 754:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1360              		.loc 1 754 88 discriminator 1 view .LVU397
+ 1361 0042 6A8B     		ldrh	r2, [r5, #26]
+ 754:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1362              		.loc 1 754 56 discriminator 1 view .LVU398
+ 1363 0044 8242     		cmp	r2, r0
+ 1364 0046 08D2     		bcs	.L79
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 44
+
+
+ 756:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->pRxData += length;
+ 1365              		.loc 1 756 11 is_stmt 1 view .LVU399
+ 756:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->pRxData += length;
+ 1366              		.loc 1 756 36 is_stmt 0 view .LVU400
+ 1367 0048 1B1A     		subs	r3, r3, r0
+ 1368 004a AB62     		str	r3, [r5, #40]
+ 757:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->data_rx_state = CDC_RECEIVE_DATA;
+ 1369              		.loc 1 757 11 is_stmt 1 view .LVU401
+ 757:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->data_rx_state = CDC_RECEIVE_DATA;
+ 1370              		.loc 1 757 31 is_stmt 0 view .LVU402
+ 1371 004c 2B6A     		ldr	r3, [r5, #32]
+ 1372 004e 1844     		add	r0, r0, r3
+ 1373              	.LVL126:
+ 757:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           CDC_Handle->data_rx_state = CDC_RECEIVE_DATA;
+ 1374              		.loc 1 757 31 view .LVU403
+ 1375 0050 2862     		str	r0, [r5, #32]
+ 758:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1376              		.loc 1 758 11 is_stmt 1 view .LVU404
+ 758:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1377              		.loc 1 758 37 is_stmt 0 view .LVU405
+ 1378 0052 0323     		movs	r3, #3
+ 1379 0054 85F84E30 		strb	r3, [r5, #78]
+ 1380 0058 05E0     		b	.L80
+ 1381              	.LVL127:
+ 1382              	.L79:
+ 762:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           USBH_CDC_ReceiveCallback(phost);
+ 1383              		.loc 1 762 11 is_stmt 1 view .LVU406
+ 762:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****           USBH_CDC_ReceiveCallback(phost);
+ 1384              		.loc 1 762 37 is_stmt 0 view .LVU407
+ 1385 005a 0023     		movs	r3, #0
+ 1386 005c 85F84E30 		strb	r3, [r5, #78]
+ 763:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1387              		.loc 1 763 11 is_stmt 1 view .LVU408
+ 1388 0060 2046     		mov	r0, r4
+ 1389              	.LVL128:
+ 763:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1390              		.loc 1 763 11 is_stmt 0 view .LVU409
+ 1391 0062 FFF7FEFF 		bl	USBH_CDC_ReceiveCallback
+ 1392              	.LVL129:
+ 1393              	.L80:
+ 767:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 1394              		.loc 1 767 9 is_stmt 1 view .LVU410
+ 767:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #if (osCMSIS < 0x20000U)
+ 1395              		.loc 1 767 23 is_stmt 0 view .LVU411
+ 1396 0066 0421     		movs	r1, #4
+ 1397 0068 C4F8E013 		str	r1, [r4, #992]
+ 769:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1398              		.loc 1 769 9 is_stmt 1 view .LVU412
+ 769:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** #else
+ 1399              		.loc 1 769 15 is_stmt 0 view .LVU413
+ 1400 006c 0022     		movs	r2, #0
+ 1401 006e D4F8D803 		ldr	r0, [r4, #984]
+ 1402 0072 FFF7FEFF 		bl	osMessagePut
+ 1403              	.LVL130:
+ 780:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1404              		.loc 1 780 1 view .LVU414
+ 1405 0076 CEE7     		b	.L75
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 45
+
+
+ 1406              		.cfi_endproc
+ 1407              	.LFE163:
+ 1409              		.section	.text.USBH_CDC_LineCodingChanged,"ax",%progbits
+ 1410              		.align	1
+ 1411              		.weak	USBH_CDC_LineCodingChanged
+ 1412              		.syntax unified
+ 1413              		.thumb
+ 1414              		.thumb_func
+ 1415              		.fpu fpv5-sp-d16
+ 1417              	USBH_CDC_LineCodingChanged:
+ 1418              	.LVL131:
+ 1419              	.LFB166:
+ 803:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 804:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** /**
+ 805:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @brief  The function informs user that Settings have been changed
+ 806:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** *  @param  pdev: Selected device
+ 807:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** * @retval None
+ 808:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** */
+ 809:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** __weak void USBH_CDC_LineCodingChanged(USBH_HandleTypeDef *phost)
+ 810:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** {
+ 1420              		.loc 1 810 1 is_stmt 1 view -0
+ 1421              		.cfi_startproc
+ 1422              		@ args = 0, pretend = 0, frame = 0
+ 1423              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1424              		@ link register save eliminated.
+ 811:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   /* Prevent unused argument(s) compilation warning */
+ 812:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   UNUSED(phost);
+ 1425              		.loc 1 812 3 view .LVU416
+ 813:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 1426              		.loc 1 813 1 is_stmt 0 view .LVU417
+ 1427 0000 7047     		bx	lr
+ 1428              		.cfi_endproc
+ 1429              	.LFE166:
+ 1431              		.section	.text.USBH_CDC_Process,"ax",%progbits
+ 1432              		.align	1
+ 1433              		.syntax unified
+ 1434              		.thumb
+ 1435              		.thumb_func
+ 1436              		.fpu fpv5-sp-d16
+ 1438              	USBH_CDC_Process:
+ 1439              	.LVL132:
+ 1440              	.LFB152:
+ 339:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef status = USBH_BUSY;
+ 1441              		.loc 1 339 1 is_stmt 1 view -0
+ 1442              		.cfi_startproc
+ 1443              		@ args = 0, pretend = 0, frame = 0
+ 1444              		@ frame_needed = 0, uses_anonymous_args = 0
+ 339:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef status = USBH_BUSY;
+ 1445              		.loc 1 339 1 is_stmt 0 view .LVU419
+ 1446 0000 70B5     		push	{r4, r5, r6, lr}
+ 1447              	.LCFI18:
+ 1448              		.cfi_def_cfa_offset 16
+ 1449              		.cfi_offset 4, -16
+ 1450              		.cfi_offset 5, -12
+ 1451              		.cfi_offset 6, -8
+ 1452              		.cfi_offset 14, -4
+ 1453 0002 0446     		mov	r4, r0
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 46
+
+
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 1454              		.loc 1 340 3 is_stmt 1 view .LVU420
+ 1455              	.LVL133:
+ 341:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   CDC_HandleTypeDef *CDC_Handle = (CDC_HandleTypeDef *) phost->pActiveClass->pData;
+ 1456              		.loc 1 341 3 view .LVU421
+ 342:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1457              		.loc 1 342 3 view .LVU422
+ 342:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1458              		.loc 1 342 62 is_stmt 0 view .LVU423
+ 1459 0004 D0F87C33 		ldr	r3, [r0, #892]
+ 342:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1460              		.loc 1 342 22 view .LVU424
+ 1461 0008 DE69     		ldr	r6, [r3, #28]
+ 1462              	.LVL134:
+ 344:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 1463              		.loc 1 344 3 is_stmt 1 view .LVU425
+ 344:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   {
+ 1464              		.loc 1 344 21 is_stmt 0 view .LVU426
+ 1465 000a 96F84C50 		ldrb	r5, [r6, #76]	@ zero_extendqisi2
+ 1466 000e 042D     		cmp	r5, #4
+ 1467 0010 04D8     		bhi	.L84
+ 1468 0012 DFE805F0 		tbb	[pc, r5]
+ 1469              	.L86:
+ 1470 0016 3F       		.byte	(.L90-.L86)/2
+ 1471 0017 05       		.byte	(.L89-.L86)/2
+ 1472 0018 13       		.byte	(.L88-.L86)/2
+ 1473 0019 39       		.byte	(.L87-.L86)/2
+ 1474 001a 41       		.byte	(.L85-.L86)/2
+ 1475 001b 00       		.p2align 1
+ 1476              	.L84:
+ 1477 001c 0125     		movs	r5, #1
+ 1478 001e 39E0     		b	.L90
+ 1479              	.L89:
+ 352:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1480              		.loc 1 352 7 is_stmt 1 view .LVU427
+ 352:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1481              		.loc 1 352 20 is_stmt 0 view .LVU428
+ 1482 0020 B16C     		ldr	r1, [r6, #72]
+ 1483 0022 FFF7FEFF 		bl	SetLineCoding
+ 1484              	.LVL135:
+ 354:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1485              		.loc 1 354 7 is_stmt 1 view .LVU429
+ 354:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1486              		.loc 1 354 10 is_stmt 0 view .LVU430
+ 1487 0026 18B9     		cbnz	r0, .L91
+ 356:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 1488              		.loc 1 356 9 is_stmt 1 view .LVU431
+ 356:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 1489              		.loc 1 356 27 is_stmt 0 view .LVU432
+ 1490 0028 0223     		movs	r3, #2
+ 1491 002a 86F84C30 		strb	r3, [r6, #76]
+ 1492 002e 31E0     		b	.L90
+ 1493              	.L91:
+ 361:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1494              		.loc 1 361 9 is_stmt 1 view .LVU433
+ 361:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1495              		.loc 1 361 12 is_stmt 0 view .LVU434
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 47
+
+
+ 1496 0030 0128     		cmp	r0, #1
+ 1497 0032 3AD0     		beq	.L93
+ 363:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1498              		.loc 1 363 11 is_stmt 1 view .LVU435
+ 363:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1499              		.loc 1 363 29 is_stmt 0 view .LVU436
+ 1500 0034 0423     		movs	r3, #4
+ 1501 0036 86F84C30 		strb	r3, [r6, #76]
+ 1502 003a 2BE0     		b	.L90
+ 1503              	.LVL136:
+ 1504              	.L88:
+ 370:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1505              		.loc 1 370 7 is_stmt 1 view .LVU437
+ 370:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1506              		.loc 1 370 20 is_stmt 0 view .LVU438
+ 1507 003c 06F14001 		add	r1, r6, #64
+ 1508 0040 FFF7FEFF 		bl	GetLineCoding
+ 1509              	.LVL137:
+ 372:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1510              		.loc 1 372 7 is_stmt 1 view .LVU439
+ 372:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1511              		.loc 1 372 10 is_stmt 0 view .LVU440
+ 1512 0044 0546     		mov	r5, r0
+ 1513 0046 C0B9     		cbnz	r0, .L92
+ 374:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1514              		.loc 1 374 9 is_stmt 1 view .LVU441
+ 374:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1515              		.loc 1 374 27 is_stmt 0 view .LVU442
+ 1516 0048 0023     		movs	r3, #0
+ 1517 004a 86F84C30 		strb	r3, [r6, #76]
+ 376:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****             (CDC_Handle->LineCoding.b.bDataBits == CDC_Handle->pUserLineCoding->b.bDataBits) &&
+ 1518              		.loc 1 376 9 is_stmt 1 view .LVU443
+ 377:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****             (CDC_Handle->LineCoding.b.bParityType == CDC_Handle->pUserLineCoding->b.bParityType) &&
+ 1519              		.loc 1 377 94 is_stmt 0 view .LVU444
+ 1520 004e 736C     		ldr	r3, [r6, #68]
+ 1521 0050 23F07F42 		bic	r2, r3, #-16777216
+ 376:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****             (CDC_Handle->LineCoding.b.bDataBits == CDC_Handle->pUserLineCoding->b.bDataBits) &&
+ 1522              		.loc 1 376 64 view .LVU445
+ 1523 0054 B16C     		ldr	r1, [r6, #72]
+ 377:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****             (CDC_Handle->LineCoding.b.bParityType == CDC_Handle->pUserLineCoding->b.bParityType) &&
+ 1524              		.loc 1 377 94 view .LVU446
+ 1525 0056 4B68     		ldr	r3, [r1, #4]
+ 1526 0058 23F07F43 		bic	r3, r3, #-16777216
+ 376:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****             (CDC_Handle->LineCoding.b.bDataBits == CDC_Handle->pUserLineCoding->b.bDataBits) &&
+ 1527              		.loc 1 376 12 view .LVU447
+ 1528 005c 9A42     		cmp	r2, r3
+ 1529 005e 01D0     		beq	.L98
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 1530              		.loc 1 340 22 view .LVU448
+ 1531 0060 0125     		movs	r5, #1
+ 1532 0062 17E0     		b	.L90
+ 1533              	.L98:
+ 379:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1534              		.loc 1 379 38 view .LVU449
+ 1535 0064 326C     		ldr	r2, [r6, #64]
+ 379:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1536              		.loc 1 379 82 view .LVU450
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 48
+
+
+ 1537 0066 0B68     		ldr	r3, [r1]
+ 378:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****             (CDC_Handle->LineCoding.b.dwDTERate == CDC_Handle->pUserLineCoding->b.dwDTERate))
+ 1538              		.loc 1 378 98 view .LVU451
+ 1539 0068 9A42     		cmp	r2, r3
+ 1540 006a 01D0     		beq	.L99
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 1541              		.loc 1 340 22 view .LVU452
+ 1542 006c 0125     		movs	r5, #1
+ 1543 006e 11E0     		b	.L90
+ 1544              	.L99:
+ 381:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1545              		.loc 1 381 11 is_stmt 1 view .LVU453
+ 1546 0070 2046     		mov	r0, r4
+ 1547              	.LVL138:
+ 381:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1548              		.loc 1 381 11 is_stmt 0 view .LVU454
+ 1549 0072 FFF7FEFF 		bl	USBH_CDC_LineCodingChanged
+ 1550              	.LVL139:
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 1551              		.loc 1 340 22 view .LVU455
+ 1552 0076 0125     		movs	r5, #1
+ 1553 0078 0CE0     		b	.L90
+ 1554              	.LVL140:
+ 1555              	.L92:
+ 386:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1556              		.loc 1 386 9 is_stmt 1 view .LVU456
+ 386:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         {
+ 1557              		.loc 1 386 12 is_stmt 0 view .LVU457
+ 1558 007a 0128     		cmp	r0, #1
+ 1559 007c 0AD0     		beq	.L90
+ 388:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1560              		.loc 1 388 11 is_stmt 1 view .LVU458
+ 388:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****         }
+ 1561              		.loc 1 388 29 is_stmt 0 view .LVU459
+ 1562 007e 0423     		movs	r3, #4
+ 1563 0080 86F84C30 		strb	r3, [r6, #76]
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 1564              		.loc 1 340 22 view .LVU460
+ 1565 0084 0125     		movs	r5, #1
+ 1566 0086 05E0     		b	.L90
+ 1567              	.LVL141:
+ 1568              	.L87:
+ 394:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       CDC_ProcessReception(phost);
+ 1569              		.loc 1 394 7 is_stmt 1 view .LVU461
+ 1570 0088 FFF7FEFF 		bl	CDC_ProcessTransmission
+ 1571              	.LVL142:
+ 395:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       break;
+ 1572              		.loc 1 395 7 view .LVU462
+ 1573 008c 2046     		mov	r0, r4
+ 1574 008e FFF7FEFF 		bl	CDC_ProcessReception
+ 1575              	.LVL143:
+ 396:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1576              		.loc 1 396 7 view .LVU463
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 1577              		.loc 1 340 22 is_stmt 0 view .LVU464
+ 1578 0092 0125     		movs	r5, #1
+ 1579              	.LVL144:
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 49
+
+
+ 1580              	.L90:
+ 413:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** }
+ 1581              		.loc 1 413 3 is_stmt 1 view .LVU465
+ 414:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1582              		.loc 1 414 1 is_stmt 0 view .LVU466
+ 1583 0094 2846     		mov	r0, r5
+ 1584 0096 70BD     		pop	{r4, r5, r6, pc}
+ 1585              	.LVL145:
+ 1586              	.L85:
+ 399:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1587              		.loc 1 399 7 is_stmt 1 view .LVU467
+ 399:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c **** 
+ 1588              		.loc 1 399 20 is_stmt 0 view .LVU468
+ 1589 0098 0021     		movs	r1, #0
+ 1590 009a FFF7FEFF 		bl	USBH_ClrFeature
+ 1591              	.LVL146:
+ 401:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1592              		.loc 1 401 7 is_stmt 1 view .LVU469
+ 401:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       {
+ 1593              		.loc 1 401 10 is_stmt 0 view .LVU470
+ 1594 009e 30B9     		cbnz	r0, .L96
+ 404:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 1595              		.loc 1 404 9 is_stmt 1 view .LVU471
+ 404:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****       }
+ 1596              		.loc 1 404 27 is_stmt 0 view .LVU472
+ 1597 00a0 0023     		movs	r3, #0
+ 1598 00a2 86F84C30 		strb	r3, [r6, #76]
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 1599              		.loc 1 340 22 view .LVU473
+ 1600 00a6 0125     		movs	r5, #1
+ 1601 00a8 F4E7     		b	.L90
+ 1602              	.L93:
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 1603              		.loc 1 340 22 view .LVU474
+ 1604 00aa 0546     		mov	r5, r0
+ 1605 00ac F2E7     		b	.L90
+ 1606              	.L96:
+ 340:Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Src/usbh_cdc.c ****   USBH_StatusTypeDef req_status = USBH_OK;
+ 1607              		.loc 1 340 22 view .LVU475
+ 1608 00ae 0125     		movs	r5, #1
+ 1609 00b0 F0E7     		b	.L90
+ 1610              		.cfi_endproc
+ 1611              	.LFE152:
+ 1613              		.global	CDC_Class
+ 1614              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 1615              		.align	2
+ 1616              	.LC0:
+ 1617 0000 43444300 		.ascii	"CDC\000"
+ 1618              		.section	.data.CDC_Class,"aw"
+ 1619              		.align	2
+ 1622              	CDC_Class:
+ 1623 0000 00000000 		.word	.LC0
+ 1624 0004 02       		.byte	2
+ 1625 0005 000000   		.space	3
+ 1626 0008 00000000 		.word	USBH_CDC_InterfaceInit
+ 1627 000c 00000000 		.word	USBH_CDC_InterfaceDeInit
+ 1628 0010 00000000 		.word	USBH_CDC_ClassRequest
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 50
+
+
+ 1629 0014 00000000 		.word	USBH_CDC_Process
+ 1630 0018 00000000 		.word	USBH_CDC_SOFProcess
+ 1631 001c 00000000 		.word	0
+ 1632              		.text
+ 1633              	.Letext0:
+ 1634              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\arm-none-eabi\\inc
+ 1635              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\arm-none-eabi\\inc
+ 1636              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 1637              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 1638              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 1639              		.file 7 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_def.h"
+ 1640              		.file 8 "Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Inc/usbh_cdc.h"
+ 1641              		.file 9 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ioreq.h"
+ 1642              		.file 10 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_core.h"
+ 1643              		.file 11 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_ctlreq.h"
+ 1644              		.file 12 "Middlewares/ST/STM32_USB_Host_Library/Core/Inc/usbh_pipes.h"
+ 1645              		.file 13 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\arm-none-eabi\\in
+ 1646              		.file 14 "<built-in>"
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 51
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usbh_cdc.c
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:18     .text.USBH_CDC_SOFProcess:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:25     .text.USBH_CDC_SOFProcess:00000000 USBH_CDC_SOFProcess
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:45     .text.SetLineCoding:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:51     .text.SetLineCoding:00000000 SetLineCoding
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:93     .text.GetLineCoding:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:99     .text.GetLineCoding:00000000 GetLineCoding
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:141    .text.USBH_CDC_ClassRequest:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:147    .text.USBH_CDC_ClassRequest:00000000 USBH_CDC_ClassRequest
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:202    .text.USBH_CDC_InterfaceDeInit:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:208    .text.USBH_CDC_InterfaceDeInit:00000000 USBH_CDC_InterfaceDeInit
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:319    .text.USBH_CDC_InterfaceInit:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:325    .text.USBH_CDC_InterfaceInit:00000000 USBH_CDC_InterfaceInit
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:628    .text.USBH_CDC_Stop:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:635    .text.USBH_CDC_Stop:00000000 USBH_CDC_Stop
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:696    .text.USBH_CDC_SetLineCoding:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:703    .text.USBH_CDC_SetLineCoding:00000000 USBH_CDC_SetLineCoding
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:766    .text.USBH_CDC_GetLineCoding:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:773    .text.USBH_CDC_GetLineCoding:00000000 USBH_CDC_GetLineCoding
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:824    .text.USBH_CDC_GetLastReceivedDataSize:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:831    .text.USBH_CDC_GetLastReceivedDataSize:00000000 USBH_CDC_GetLastReceivedDataSize
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:881    .text.USBH_CDC_Transmit:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:888    .text.USBH_CDC_Transmit:00000000 USBH_CDC_Transmit
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:966    .text.USBH_CDC_Receive:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:973    .text.USBH_CDC_Receive:00000000 USBH_CDC_Receive
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1050   .text.USBH_CDC_TransmitCallback:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1057   .text.USBH_CDC_TransmitCallback:00000000 USBH_CDC_TransmitCallback
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1072   .text.CDC_ProcessTransmission:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1078   .text.CDC_ProcessTransmission:00000000 CDC_ProcessTransmission
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1257   .text.USBH_CDC_ReceiveCallback:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1264   .text.USBH_CDC_ReceiveCallback:00000000 USBH_CDC_ReceiveCallback
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1279   .text.CDC_ProcessReception:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1285   .text.CDC_ProcessReception:00000000 CDC_ProcessReception
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1410   .text.USBH_CDC_LineCodingChanged:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1417   .text.USBH_CDC_LineCodingChanged:00000000 USBH_CDC_LineCodingChanged
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1432   .text.USBH_CDC_Process:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1438   .text.USBH_CDC_Process:00000000 USBH_CDC_Process
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1470   .text.USBH_CDC_Process:00000016 $d
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1622   .data.CDC_Class:00000000 CDC_Class
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1615   .rodata.str1.4:00000000 $d
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1619   .data.CDC_Class:00000000 $d
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1475   .text.USBH_CDC_Process:0000001b $d
+C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s:1475   .text.USBH_CDC_Process:0000001c $t
+
+UNDEFINED SYMBOLS
+USBH_CtlReq
+free
+USBH_ClosePipe
+USBH_FreePipe
+USBH_FindInterface
+USBH_SelectInterface
+malloc
+memset
+USBH_AllocPipe
+USBH_OpenPipe
+USBH_LL_SetToggle
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccAdr59e.s 			page 52
+
+
+osMessagePut
+USBH_LL_GetLastXferSize
+USBH_BulkSendData
+USBH_LL_GetURBState
+USBH_BulkReceiveData
+USBH_ClrFeature

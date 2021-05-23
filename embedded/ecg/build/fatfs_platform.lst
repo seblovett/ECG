@@ -1,0 +1,120 @@
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccRgigAy.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"fatfs_platform.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.BSP_PlatformIsDetected,"ax",%progbits
+  18              		.align	1
+  19              		.global	BSP_PlatformIsDetected
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv5-sp-d16
+  26              	BSP_PlatformIsDetected:
+  27              	.LFB141:
+  28              		.file 1 "FATFS/Target/fatfs_platform.c"
+   1:FATFS/Target/fatfs_platform.c **** /**
+   2:FATFS/Target/fatfs_platform.c ****   ******************************************************************************
+   3:FATFS/Target/fatfs_platform.c ****   * @file           : fatfs_platform.c
+   4:FATFS/Target/fatfs_platform.c ****   * @brief          : fatfs_platform source file
+   5:FATFS/Target/fatfs_platform.c ****   ******************************************************************************
+   6:FATFS/Target/fatfs_platform.c ****   * @attention
+   7:FATFS/Target/fatfs_platform.c ****   *
+   8:FATFS/Target/fatfs_platform.c ****   * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+   9:FATFS/Target/fatfs_platform.c ****   * All rights reserved.</center></h2>
+  10:FATFS/Target/fatfs_platform.c ****   *
+  11:FATFS/Target/fatfs_platform.c ****   * This software component is licensed by ST under Ultimate Liberty license
+  12:FATFS/Target/fatfs_platform.c ****   * SLA0044, the "License"; You may not use this file except in compliance with
+  13:FATFS/Target/fatfs_platform.c ****   * the License. You may obtain a copy of the License at:
+  14:FATFS/Target/fatfs_platform.c ****   *                             www.st.com/SLA0044
+  15:FATFS/Target/fatfs_platform.c ****   *
+  16:FATFS/Target/fatfs_platform.c ****   ******************************************************************************
+  17:FATFS/Target/fatfs_platform.c **** */
+  18:FATFS/Target/fatfs_platform.c **** #include "fatfs_platform.h"
+  19:FATFS/Target/fatfs_platform.c **** 
+  20:FATFS/Target/fatfs_platform.c **** uint8_t	BSP_PlatformIsDetected(void) {
+  29              		.loc 1 20 38 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  21:FATFS/Target/fatfs_platform.c ****     uint8_t status = SD_PRESENT;
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccRgigAy.s 			page 2
+
+
+  38              		.loc 1 21 5 view .LVU1
+  39              	.LVL0:
+  22:FATFS/Target/fatfs_platform.c ****     /* Check SD card detect pin */
+  23:FATFS/Target/fatfs_platform.c ****     if(HAL_GPIO_ReadPin(SD_DETECT_GPIO_PORT, SD_DETECT_PIN) != GPIO_PIN_RESET)
+  40              		.loc 1 23 5 view .LVU2
+  41              		.loc 1 23 8 is_stmt 0 view .LVU3
+  42 0002 4FF40051 		mov	r1, #8192
+  43 0006 0448     		ldr	r0, .L5
+  44 0008 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+  45              	.LVL1:
+  46              		.loc 1 23 7 view .LVU4
+  47 000c 08B9     		cbnz	r0, .L3
+  21:FATFS/Target/fatfs_platform.c ****     uint8_t status = SD_PRESENT;
+  48              		.loc 1 21 13 view .LVU5
+  49 000e 0120     		movs	r0, #1
+  50              	.L2:
+  51              	.LVL2:
+  24:FATFS/Target/fatfs_platform.c ****     {
+  25:FATFS/Target/fatfs_platform.c ****         status = SD_NOT_PRESENT;
+  26:FATFS/Target/fatfs_platform.c ****     }
+  27:FATFS/Target/fatfs_platform.c ****     /* USER CODE BEGIN 1 */
+  28:FATFS/Target/fatfs_platform.c ****     /* user code can be inserted here */
+  29:FATFS/Target/fatfs_platform.c ****     /* USER CODE END 1 */
+  30:FATFS/Target/fatfs_platform.c ****     return status;
+  52              		.loc 1 30 5 is_stmt 1 view .LVU6
+  31:FATFS/Target/fatfs_platform.c **** }
+  53              		.loc 1 31 1 is_stmt 0 view .LVU7
+  54 0010 08BD     		pop	{r3, pc}
+  55              	.LVL3:
+  56              	.L3:
+  25:FATFS/Target/fatfs_platform.c ****     }
+  57              		.loc 1 25 16 view .LVU8
+  58 0012 0020     		movs	r0, #0
+  59 0014 FCE7     		b	.L2
+  60              	.L6:
+  61 0016 00BF     		.align	2
+  62              	.L5:
+  63 0018 00080240 		.word	1073874944
+  64              		.cfi_endproc
+  65              	.LFE141:
+  67              		.text
+  68              	.Letext0:
+  69              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\arm-none-eabi\\inc
+  70              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2020-q4-major\\arm-none-eabi\\inc
+  71              		.file 4 "Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f746xx.h"
+  72              		.file 5 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_gpio.h"
+ARM GAS  C:\Users\seblo\AppData\Local\Temp\ccRgigAy.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fatfs_platform.c
+C:\Users\seblo\AppData\Local\Temp\ccRgigAy.s:18     .text.BSP_PlatformIsDetected:00000000 $t
+C:\Users\seblo\AppData\Local\Temp\ccRgigAy.s:26     .text.BSP_PlatformIsDetected:00000000 BSP_PlatformIsDetected
+C:\Users\seblo\AppData\Local\Temp\ccRgigAy.s:63     .text.BSP_PlatformIsDetected:00000018 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_ReadPin
